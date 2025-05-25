@@ -1,0 +1,22 @@
+{
+  "name": "lasuillard/devobs",
+  "image": "mcr.microsoft.com/devcontainers/rust:1-bookworm",
+  "features": {
+    "ghcr.io/devcontainers-contrib/features/pre-commit:2": {}
+  },
+  "onCreateCommand": "./.devcontainer/onCreateCommand.sh",
+  "postAttachCommand": "pre-commit install",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ldez.ignore-files",
+        "redhat.vscode-yaml",
+        "tamasfe.even-better-toml",
+        "streetsidesoftware.code-spell-checker",
+        "EditorConfig.EditorConfig",
+        "vadimcn.vscode-lldb",
+        "rust-lang.rust-analyzer"
+      ]
+    }
+  }
+}

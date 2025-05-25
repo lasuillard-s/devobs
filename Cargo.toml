@@ -1,0 +1,16 @@
+[package]
+name = "devobs"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+clap = { version = "4.5.38", features = ["derive"] }
+log = "0.4.27"
+simplelog = "0.12.2"
+tokio = { version = "1.45.1", features = ["full"] }
+
+[dev-dependencies]
+anyhow = "1.0.86"
+mockall = "0.13.0"
+reqwest = "0.12.5"
+rstest = "0.21.0"
