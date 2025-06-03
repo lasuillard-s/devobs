@@ -1,19 +1,21 @@
+use crate::GlobalOpts;
+use anyhow::{Result, bail};
 use clap::Args;
 
 /// Check file has a preferred suffix.
-#[derive(Args, Debug)]
+#[derive(Args, Debug, Clone)]
 pub struct CommandArgs {
     file: String,
 }
 
-pub fn command(args: CommandArgs) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+pub fn command(args: CommandArgs, _global_opts: GlobalOpts) -> Result<()> {
     // Here you would implement the logic to check the file pair.
     // For demonstration, we will just log the file name.
     log::info!("Checking file: {}", args.file);
 
     // Simulate some processing
     if args.file.is_empty() {
-        return Err("File name cannot be empty".into());
+        bail!("File name cannot be empty");
     }
 
     Ok(())

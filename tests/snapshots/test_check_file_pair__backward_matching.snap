@@ -1,0 +1,6 @@
+---
+source: tests/test_check_file_pair.rs
+expression: "stdout.replace(temp_dir.path().to_str().unwrap(), \"<temp_dir>\")"
+---
+[WARN] Pair of file <temp_dir>/tests/utils/slack/test_template.py does not exist: <temp_dir>/src/utils/slack/template.py
+[WARN] Pair of file <temp_dir>/tests/utils/test_logger.py does not exist: <temp_dir>/src/utils/logger.py
