@@ -98,17 +98,9 @@ pub fn command(args: CommandArgs, global_opts: GlobalOpts) -> Result<()> {
         let relative_from = path
             .strip_prefix(&from)?
             .parent()
-            .ok_or(anyhow!("Failed to get parent directory"))?
-            .to_str()
-            .ok_or(anyhow!("Failed to convert parent directory to string"))?;
-
-        // If empty string, use "."
-        let relative_from = if relative_from.is_empty() {
-            ".".to_string()
-        } else {
-            relative_from.to_string()
-        };
-
+            .map(|p| p.to_str().unwrap_or("."))
+            .unwrap_or(".")
+            .to_string();
         // Prepare variables for substitution
         vars.insert("stem".to_string(), stem);
         vars.insert("extension".to_string(), extension);
