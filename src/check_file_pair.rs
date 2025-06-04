@@ -77,7 +77,7 @@ pub fn command(args: CommandArgs, global_opts: GlobalOpts) -> Result<()> {
     base_vars.insert("cwd".to_string(), cwd.to_str().unwrap());
     base_vars.insert("from".to_string(), from.to_str().unwrap());
     base_vars.insert("to".to_string(), to.to_str().unwrap());
-    log::debug!("Prepared base variables: {:?}", base_vars);
+    log::debug!("Prepared base variables: {base_vars:?}");
 
     for path in list_files(&from, &args.include, &args.exclude) {
         log::trace!("Checking file {}", path.display());
@@ -118,15 +118,11 @@ pub fn command(args: CommandArgs, global_opts: GlobalOpts) -> Result<()> {
                 vars.insert(name.to_string(), value);
             }
         }
-        log::debug!(
-            "Prepared substitution variables for file {:?}: {:?}",
-            path,
-            vars
-        );
+        log::debug!("Prepared substitution variables for file {path:?}: {vars:?}");
 
         // Render the expected file path
         let result = strfmt(&args.expect, &vars)?;
-        log::trace!("Formatted result: {}", result);
+        log::trace!("Formatted result: {result}");
 
         let result_path = absolute(PathBuf::from(&result))?;
         log::trace!("Resolved result path: {}", result_path.display());
@@ -156,7 +152,7 @@ pub fn command(args: CommandArgs, global_opts: GlobalOpts) -> Result<()> {
         for missing in &missing_files {
             log::warn!("Creating missing file: {}", missing.display());
             if !global_opts.dry_run {
-                touch_file(&missing)?;
+                touch_file(missing)?;
             }
         }
         bail!("Created {} missing files.", missing_files.len());

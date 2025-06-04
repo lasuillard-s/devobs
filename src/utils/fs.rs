@@ -1,10 +1,11 @@
-use std::{fs::create_dir_all, path::PathBuf};
+use std::{fs::create_dir_all,
+          path::{Path, PathBuf}};
 
 use anyhow::Result;
 use glob::glob;
 
 /// Create the file if it does not exist, including its parent directories.
-pub(crate) fn touch_file(path: &PathBuf) -> Result<()> {
+pub(crate) fn touch_file(path: &Path) -> Result<()> {
     if path.exists() {
         log::debug!("File already exists: {}", path.display());
         return Ok(());
@@ -21,11 +22,7 @@ pub(crate) fn touch_file(path: &PathBuf) -> Result<()> {
 }
 
 /// List files in the `from` directory based on the include and exclude patterns.
-pub(crate) fn list_files(
-    from: &PathBuf,
-    include: &Vec<String>,
-    exclude: &Vec<String>,
-) -> Vec<PathBuf> {
+pub(crate) fn list_files(from: &Path, include: &[String], exclude: &[String]) -> Vec<PathBuf> {
     let mut include = expand_glob(from, include);
     let exclude = expand_glob(from, exclude);
 
@@ -39,10 +36,10 @@ pub(crate) fn list_files(
 }
 
 /// Expand glob patterns in the given directory, returning a flat list of paths.
-pub(crate) fn expand_glob(from: &PathBuf, patterns: &Vec<String>) -> Vec<PathBuf> {
+pub(crate) fn expand_glob(from: &Path, patterns: &[String]) -> Vec<PathBuf> {
     patterns
         .iter()
-        .map(|s| {
+        .flat_map(|s| {
             glob(
                 from.join(s)
                     .to_str()
@@ -50,7 +47,6 @@ pub(crate) fn expand_glob(from: &PathBuf, patterns: &Vec<String>) -> Vec<PathBuf
             )
             .expect("Failed to create glob pattern")
         })
-        .flatten()
         .filter_map(Result::ok)
         .collect()
 }

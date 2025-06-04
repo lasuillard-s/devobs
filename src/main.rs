@@ -89,8 +89,8 @@ async fn _main(args: Cli) -> Result<()> {
     )?;
 
     // Check the command and execute it
-    log::trace!("Parsed arguments: {:?}", args);
-    log::trace!("Global options: {:?}", global_opts);
+    log::trace!("Parsed arguments: {args:?}");
+    log::trace!("Global options: {global_opts:?}");
     log::trace!("Running command {:?} at {:?}", args.command, current_dir());
     match args.command {
         Commands::CheckFilePair(args) => check_file_pair::command(args, global_opts),
