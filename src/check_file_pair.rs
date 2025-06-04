@@ -101,6 +101,7 @@ pub fn command(args: CommandArgs, global_opts: GlobalOpts) -> Result<()> {
             .map(|p| p.to_str().unwrap_or("."))
             .unwrap_or(".")
             .to_string();
+
         // Prepare variables for substitution
         vars.insert("stem".to_string(), stem);
         vars.insert("extension".to_string(), extension);
@@ -159,8 +160,8 @@ pub fn command(args: CommandArgs, global_opts: GlobalOpts) -> Result<()> {
         }
         bail!("Created {} missing files.", missing_files.len());
     }
-
     log::info!("Everything is fine, no missing files.");
+
     Ok(())
 }
 
