@@ -1,8 +1,9 @@
 mod helpers;
 
+use std::collections::HashMap;
+
 use assert_cmd::Command;
 use insta::assert_snapshot;
-use std::collections::HashMap;
 
 use crate::helpers::{first_line, list_dir, parse_output, temp_git_dir};
 

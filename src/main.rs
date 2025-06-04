@@ -1,5 +1,6 @@
 mod check_file_pair;
 mod preferred_suffix;
+mod utils;
 
 use std::{cmp::max, env::current_dir};
 

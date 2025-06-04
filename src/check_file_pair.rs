@@ -1,13 +1,14 @@
-use crate::GlobalOpts;
+use std::{collections::HashMap,
+          env::current_dir,
+          path::{PathBuf, absolute}};
+
 use anyhow::{Result, anyhow, bail};
 use clap::Args;
-use glob::glob;
 use regex::{self, Regex};
-use std::collections::HashMap;
-use std::env::current_dir;
-use std::fs::create_dir_all;
-use std::path::{PathBuf, absolute};
 use strfmt::strfmt;
+
+use crate::{GlobalOpts,
+            utils::fs::{list_files, touch_file}};
 
 /// Check for matching file exists.
 #[derive(Args, Debug, Clone)]
@@ -163,54 +164,6 @@ pub fn command(args: CommandArgs, global_opts: GlobalOpts) -> Result<()> {
     log::info!("Everything is fine, no missing files.");
 
     Ok(())
-}
-
-/// Create the file if it does not exist, including its parent directories.
-fn touch_file(path: &PathBuf) -> Result<()> {
-    if path.exists() {
-        log::debug!("File already exists: {}", path.display());
-        return Ok(());
-    }
-
-    create_dir_all(
-        path.parent()
-            .expect("Failed to get parent directory for file creation."),
-    )?;
-    std::fs::File::create(path)?;
-    log::debug!("Created file: {}", path.display());
-
-    Ok(())
-}
-
-/// List files in the `from` directory based on the include and exclude patterns.
-fn list_files(from: &PathBuf, include: &Vec<String>, exclude: &Vec<String>) -> Vec<PathBuf> {
-    let mut include = expand_glob(from, include);
-    let exclude = expand_glob(from, exclude);
-
-    // Filter out files that match the exclude patterns
-    include.retain(|path| {
-        // Exclude files that match any of the exclude patterns
-        !exclude.iter().any(|ex| path == ex)
-    });
-
-    include
-}
-
-/// Expand glob patterns in the given directory, returning a flat list of paths.
-fn expand_glob(from: &PathBuf, patterns: &Vec<String>) -> Vec<PathBuf> {
-    patterns
-        .iter()
-        .map(|s| {
-            glob(
-                from.join(s)
-                    .to_str()
-                    .expect("Failed to convert path to string"),
-            )
-            .expect("Failed to create glob pattern")
-        })
-        .flatten()
-        .filter_map(Result::ok)
-        .collect()
 }
 
 #[cfg(test)]

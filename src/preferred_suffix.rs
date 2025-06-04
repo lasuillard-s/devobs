@@ -1,6 +1,7 @@
-use crate::GlobalOpts;
 use anyhow::{Result, bail};
 use clap::Args;
+
+use crate::GlobalOpts;
 
 /// Check file has a preferred suffix.
 #[derive(Args, Debug, Clone)]
