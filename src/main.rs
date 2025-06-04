@@ -1,5 +1,4 @@
-mod check_file_pair;
-mod preferred_suffix;
+mod commands;
 #[cfg(test)]
 #[path = "../tests/test_helpers.rs"]
 pub(crate) mod test_helpers;
@@ -46,8 +45,8 @@ struct GlobalOpts {
 
 #[derive(Subcommand, Debug, Clone)]
 enum Commands {
-    CheckFilePair(check_file_pair::CommandArgs),
-    PreferredSuffix(preferred_suffix::CommandArgs),
+    CheckFilePair(crate::commands::check_file_pair::CommandArgs),
+    PreferredSuffix(crate::commands::preferred_suffix::CommandArgs),
 }
 
 // TODO(lasuillard): Customize log formatter
@@ -96,8 +95,12 @@ async fn _main(args: Cli) -> Result<()> {
     log::trace!("Global options: {global_opts:?}");
     log::trace!("Running command {:?} at {:?}", args.command, current_dir());
     match args.command {
-        Commands::CheckFilePair(args) => check_file_pair::command(args, global_opts),
-        Commands::PreferredSuffix(args) => preferred_suffix::command(args, global_opts),
+        Commands::CheckFilePair(args) => {
+            crate::commands::check_file_pair::command(args, global_opts)
+        }
+        Commands::PreferredSuffix(args) => {
+            crate::commands::preferred_suffix::command(args, global_opts)
+        }
     }
 }
 

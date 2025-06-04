@@ -1,5 +1,3 @@
-mod test_helpers;
-
 use std::collections::HashMap;
 
 use assert_cmd::Command;

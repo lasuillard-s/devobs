@@ -64,7 +64,7 @@ pub struct CommandArgs {
     create_if_not_exists: bool,
 }
 
-pub fn command(args: CommandArgs, global_opts: GlobalOpts) -> Result<()> {
+pub(crate) fn command(args: CommandArgs, global_opts: GlobalOpts) -> Result<()> {
     let mut missing_files = vec![] as Vec<PathBuf>;
 
     // Preprocess options

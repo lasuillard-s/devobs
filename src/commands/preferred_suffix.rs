@@ -9,7 +9,7 @@ pub struct CommandArgs {
     file: String,
 }
 
-pub fn command(args: CommandArgs, _global_opts: GlobalOpts) -> Result<()> {
+pub(crate) fn command(args: CommandArgs, _global_opts: GlobalOpts) -> Result<()> {
     // Here you would implement the logic to check the file pair.
     // For demonstration, we will just log the file name.
     log::info!("Checking file: {}", args.file);
