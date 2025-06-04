@@ -161,12 +161,3 @@ pub fn command(args: CommandArgs, global_opts: GlobalOpts) -> Result<()> {
 
     Ok(())
 }
-
-#[cfg(test)]
-mod tests {
-    // TODO(lasuillard): Write unit tests
-    #[test]
-    fn test_nothing() {
-        assert_eq!(1 + 1, 2);
-    }
-}
