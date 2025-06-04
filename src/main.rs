@@ -1,4 +1,7 @@
 mod check_file_pair;
+#[cfg(test)]
+#[path = "../tests/helpers.rs"]
+pub(crate) mod helpers;
 mod preferred_suffix;
 mod utils;
 

@@ -53,9 +53,190 @@ pub(crate) fn expand_glob(from: &Path, patterns: &[String]) -> Vec<PathBuf> {
 
 #[cfg(test)]
 mod tests {
-    // TODO(lasuillard): Write unit tests
+    use std::collections::HashMap;
+
+    use anyhow::Result;
+
+    use super::*;
+    use crate::helpers::temp_git_dir;
+
     #[test]
-    fn test_nothing() {
-        assert_eq!(1 + 1, 2);
+    fn test_touch_file() -> Result<()> {
+        // Arrange
+        let temp_dir = temp_git_dir(None);
+        let file_path = temp_dir.path().join("test.txt");
+        assert!(!file_path.exists());
+
+        // Act
+        touch_file(&file_path)?;
+
+        // Assert
+        assert!(file_path.exists());
+        Ok(())
+    }
+
+    #[test]
+    fn test_touch_file_nested_directory() -> Result<()> {
+        // Arrange
+        let temp_dir = temp_git_dir(None);
+        let nested_file_path = temp_dir.path().join("nested/dir/test.txt");
+        assert!(!nested_file_path.exists());
+
+        // Act
+        touch_file(&nested_file_path)?;
+
+        // Assert
+        assert!(nested_file_path.exists());
+        Ok(())
+    }
+
+    #[test]
+    fn test_touch_existing_file() -> Result<()> {
+        // Arrange
+        let temp_dir = temp_git_dir(Some(HashMap::<_, _>::from_iter(vec![("test.txt", None)])));
+        let file_path = temp_dir.path().join("test.txt");
+        assert!(file_path.exists());
+
+        // Act
+        touch_file(&file_path)?;
+
+        // Assert
+        assert!(file_path.exists());
+        Ok(())
+    }
+
+    #[test]
+    fn test_expand_glob_simple() {
+        // Arrange
+        let temp_dir = temp_git_dir(Some(HashMap::<_, _>::from_iter(vec![
+            ("file1.txt", None),
+            ("file2.txt", None),
+            ("other.log", None),
+        ])));
+        let dir_path = temp_dir.path();
+
+        // Act
+        let mut txt_files = expand_glob(dir_path, &["*.txt".to_string()]);
+        txt_files.sort(); // Sort for consistent comparison
+
+        // Assert
+        let expected = vec![dir_path.join("file1.txt"), dir_path.join("file2.txt")];
+
+        assert_eq!(txt_files, expected);
+    }
+
+    #[test]
+    fn test_expand_glob_multiple_patterns() {
+        // Arrange
+        let temp_dir = temp_git_dir(Some(HashMap::<_, _>::from_iter(vec![
+            ("file1.txt", None),
+            ("file2.txt", None),
+            ("other.log", None),
+        ])));
+        let dir_path = temp_dir.path();
+
+        // Act
+        let mut all_files = expand_glob(dir_path, &["*.txt".to_string(), "*.log".to_string()]);
+        all_files.sort(); // Sort for consistent comparison
+
+        // Assert
+        let expected = vec![
+            dir_path.join("file1.txt"),
+            dir_path.join("file2.txt"),
+            dir_path.join("other.log"),
+        ];
+
+        assert_eq!(all_files, expected);
+    }
+    #[test]
+    fn test_expand_glob_recursive() {
+        // Arrange
+        let temp_dir = temp_git_dir(Some(HashMap::<_, _>::from_iter(vec![
+            ("file1.txt", None),
+            ("file2.txt", None),
+            ("subdir/nested.txt", None),
+        ])));
+        let dir_path = temp_dir.path();
+
+        // Act
+        let mut all_nested = expand_glob(dir_path, &["**/*.txt".to_string()]);
+        all_nested.sort(); // Sort for consistent comparison
+
+        // Assert
+        let expected = vec![
+            dir_path.join("file1.txt"),
+            dir_path.join("file2.txt"),
+            dir_path.join("subdir/nested.txt"),
+        ];
+
+        assert_eq!(all_nested, expected);
+    }
+
+    #[test]
+    fn test_list_files_with_exclude() {
+        // Arrange
+        let temp_dir = temp_git_dir(Some(HashMap::<_, _>::from_iter(vec![
+            ("file1.txt", None),
+            ("file2.txt", None),
+            ("file3.txt", None),
+        ])));
+        let dir_path = temp_dir.path();
+
+        // Act
+        let mut files = list_files(dir_path, &["*.txt".to_string()], &["file2.txt".to_string()]);
+        files.sort(); // Sort for consistent comparison
+
+        // Assert
+        let expected = vec![dir_path.join("file1.txt"), dir_path.join("file3.txt")];
+
+        assert_eq!(files, expected);
+    }
+
+    #[test]
+    fn test_list_files_recursive_with_exclude() {
+        // Arrange
+        let temp_dir = temp_git_dir(Some(HashMap::<_, _>::from_iter(vec![
+            ("file1.txt", None),
+            ("file2.txt", None),
+            ("file3.txt", None),
+            ("other.log", None),
+            ("subdir/nested.txt", None),
+            ("subdir/nested.log", None),
+        ])));
+        let dir_path = temp_dir.path();
+
+        // Act
+        let mut files = list_files(
+            dir_path,
+            &["**/*.txt".to_string()],
+            &["**/*.log".to_string()],
+        );
+        files.sort(); // Sort for consistent comparison
+
+        // Assert
+        let expected = vec![
+            dir_path.join("file1.txt"),
+            dir_path.join("file2.txt"),
+            dir_path.join("file3.txt"),
+            dir_path.join("subdir/nested.txt"),
+        ];
+
+        assert_eq!(files, expected);
+    }
+
+    #[test]
+    fn test_list_files_empty_patterns() {
+        // Arrange
+        let temp_dir = temp_git_dir(Some(HashMap::<_, _>::from_iter(vec![
+            ("file1.txt", None),
+            ("file2.txt", None),
+        ])));
+        let dir_path = temp_dir.path();
+
+        // Act
+        let files = list_files(dir_path, &[], &[]);
+
+        // Assert
+        assert_eq!(files, &[] as &[PathBuf]);
     }
 }
