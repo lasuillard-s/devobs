@@ -58,7 +58,7 @@ mod tests {
     use anyhow::Result;
 
     use super::*;
-    use crate::helpers::temp_git_dir;
+    use crate::test_helpers::temp_git_dir;
 
     #[test]
     fn test_touch_file() -> Result<()> {

@@ -1,8 +1,8 @@
 mod check_file_pair;
-#[cfg(test)]
-#[path = "../tests/helpers.rs"]
-pub(crate) mod helpers;
 mod preferred_suffix;
+#[cfg(test)]
+#[path = "../tests/test_helpers.rs"]
+pub(crate) mod test_helpers;
 mod utils;
 
 use std::{cmp::max, env::current_dir};

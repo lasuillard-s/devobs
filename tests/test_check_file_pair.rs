@@ -1,11 +1,11 @@
-mod helpers;
+mod test_helpers;
 
 use std::collections::HashMap;
 
 use assert_cmd::Command;
 use insta::assert_snapshot;
 
-use crate::helpers::{first_line, list_dir, parse_output, temp_git_dir};
+use crate::test_helpers::{first_line, list_dir, parse_output, temp_git_dir};
 
 #[test]
 fn test_empty_directory_no_error_no_output() {
