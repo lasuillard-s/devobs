@@ -105,26 +105,29 @@ mod tests {
     }
 
     #[test]
-    fn test_expand_glob_simple() {
+    fn test_expand_glob_simple() -> Result<()> {
         // Arrange
-        let temp_dir = get_temp_dir(hmap! {            "file1.txt" => "",
-                "file2.txt" => "",
-                "other.log" => "",
+        let temp_dir = get_temp_dir(hmap! {
+            "file1.txt" => "",
+            "file2.txt" => "",
+            "other.log" => "",
         });
         let dir_path = temp_dir.path();
 
         // Act
         let mut txt_files = expand_glob(dir_path, &["*.txt".to_string()]);
-        txt_files.sort(); // Sort for consistent comparison
+        txt_files.sort();
 
         // Assert
-        let expected = vec![dir_path.join("file1.txt"), dir_path.join("file2.txt")];
-
-        assert_eq!(txt_files, expected);
+        assert_eq!(
+            txt_files,
+            vec![dir_path.join("file1.txt"), dir_path.join("file2.txt")]
+        );
+        Ok(())
     }
 
     #[test]
-    fn test_expand_glob_multiple_patterns() {
+    fn test_expand_glob_multiple_patterns() -> Result<()> {
         // Arrange
         let temp_dir = get_temp_dir(hmap! {
             "file1.txt" => "",
@@ -135,19 +138,22 @@ mod tests {
 
         // Act
         let mut all_files = expand_glob(dir_path, &["*.txt".to_string(), "*.log".to_string()]);
-        all_files.sort(); // Sort for consistent comparison
+        all_files.sort();
 
         // Assert
-        let expected = vec![
-            dir_path.join("file1.txt"),
-            dir_path.join("file2.txt"),
-            dir_path.join("other.log"),
-        ];
-
-        assert_eq!(all_files, expected);
+        assert_eq!(
+            all_files,
+            vec![
+                dir_path.join("file1.txt"),
+                dir_path.join("file2.txt"),
+                dir_path.join("other.log"),
+            ]
+        );
+        Ok(())
     }
+
     #[test]
-    fn test_expand_glob_recursive() {
+    fn test_expand_glob_recursive() -> Result<()> {
         // Arrange
         let temp_dir = get_temp_dir(hmap! {
             "file1.txt" => "",
@@ -158,20 +164,22 @@ mod tests {
 
         // Act
         let mut all_nested = expand_glob(dir_path, &["**/*.txt".to_string()]);
-        all_nested.sort(); // Sort for consistent comparison
+        all_nested.sort();
 
         // Assert
-        let expected = vec![
-            dir_path.join("file1.txt"),
-            dir_path.join("file2.txt"),
-            dir_path.join("subdir/nested.txt"),
-        ];
-
-        assert_eq!(all_nested, expected);
+        assert_eq!(
+            all_nested,
+            vec![
+                dir_path.join("file1.txt"),
+                dir_path.join("file2.txt"),
+                dir_path.join("subdir/nested.txt"),
+            ]
+        );
+        Ok(())
     }
 
     #[test]
-    fn test_list_files_with_exclude() {
+    fn test_list_files_with_exclude() -> Result<()> {
         // Arrange
         let temp_dir = get_temp_dir(hmap! {
             "file1.txt" => "",
@@ -182,16 +190,18 @@ mod tests {
 
         // Act
         let mut files = list_files(dir_path, &["*.txt".to_string()], &["file2.txt".to_string()]);
-        files.sort(); // Sort for consistent comparison
+        files.sort();
 
         // Assert
-        let expected = vec![dir_path.join("file1.txt"), dir_path.join("file3.txt")];
-
-        assert_eq!(files, expected);
+        assert_eq!(
+            files,
+            vec![dir_path.join("file1.txt"), dir_path.join("file3.txt")]
+        );
+        Ok(())
     }
 
     #[test]
-    fn test_list_files_recursive_with_exclude() {
+    fn test_list_files_recursive_with_exclude() -> Result<()> {
         // Arrange
         let temp_dir = get_temp_dir(hmap! {
             "file1.txt" => "",
@@ -209,21 +219,23 @@ mod tests {
             &["**/*.txt".to_string()],
             &["**/*.log".to_string()],
         );
-        files.sort(); // Sort for consistent comparison
+        files.sort();
 
         // Assert
-        let expected = vec![
-            dir_path.join("file1.txt"),
-            dir_path.join("file2.txt"),
-            dir_path.join("file3.txt"),
-            dir_path.join("subdir/nested.txt"),
-        ];
-
-        assert_eq!(files, expected);
+        assert_eq!(
+            files,
+            vec![
+                dir_path.join("file1.txt"),
+                dir_path.join("file2.txt"),
+                dir_path.join("file3.txt"),
+                dir_path.join("subdir/nested.txt"),
+            ]
+        );
+        Ok(())
     }
 
     #[test]
-    fn test_list_files_empty_patterns() {
+    fn test_list_files_empty_patterns() -> Result<()> {
         // Arrange
         let temp_dir = get_temp_dir(hmap! {
             "file1.txt" => "",
@@ -236,5 +248,6 @@ mod tests {
 
         // Assert
         assert_eq!(files, &[] as &[PathBuf]);
+        Ok(())
     }
 }

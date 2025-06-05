@@ -1,3 +1,4 @@
+use anyhow::Result;
 use assert_cmd::Command;
 use insta::assert_snapshot;
 use sugars::hmap;
@@ -6,12 +7,12 @@ use crate::{helpers::{first_line, get_temp_dir, list_dir, normalize_console_outp
             to_str};
 
 #[test]
-fn test_empty_directory_no_error_no_output() {
+fn test_empty_directory_no_error_no_output() -> Result<()> {
     // Arrange
     let temp_dir = get_temp_dir(hmap! {});
 
     // Act
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed to create command");
+    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
     let assert = cmd
         .arg("--no-colors")
         .arg("check-file-pair")
@@ -30,10 +31,11 @@ fn test_empty_directory_no_error_no_output() {
     ));
     assert_eq!(stderr, "");
     assert_eq!(list_dir(temp_dir.path()), vec![] as Vec<String>);
+    Ok(())
 }
 
 #[test]
-fn test_forward_matching() {
+fn test_forward_matching() -> Result<()> {
     // Arrange
     let temp_dir = get_temp_dir(hmap! {
         "src/__init__.py" => "",
@@ -43,7 +45,7 @@ fn test_forward_matching() {
     });
 
     // Act
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed to create command");
+    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
     let assert = cmd
         .arg("--no-colors")
         .arg("check-file-pair")
@@ -75,10 +77,11 @@ fn test_forward_matching() {
             "src/utils/slack/template.py",
         ]
     );
+    Ok(())
 }
 
 #[test]
-fn test_backward_matching() {
+fn test_backward_matching() -> Result<()> {
     // Arrange
     let temp_dir = get_temp_dir(hmap! {
         "src/__init__.py" => "",
@@ -89,7 +92,7 @@ fn test_backward_matching() {
     });
 
     // Act
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed to create command");
+    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
     let assert = cmd
         .arg("--no-colors")
         .arg("check-file-pair")
@@ -122,10 +125,11 @@ fn test_backward_matching() {
             "tests/utils/test_logger.py",
         ]
     );
+    Ok(())
 }
 
 #[test]
-fn test_on_fully_populated_directory() {
+fn test_on_fully_populated_directory() -> Result<()> {
     // Arrange
     let temp_dir = get_temp_dir(hmap! {
         "src/__init__.py" => "",
@@ -140,7 +144,7 @@ fn test_on_fully_populated_directory() {
     });
 
     // Act
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed to create command");
+    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
     let assert = cmd
         .arg("--no-colors")
         .arg("check-file-pair")
@@ -175,10 +179,11 @@ fn test_on_fully_populated_directory() {
             "tests/utils/test_logger.py",
         ]
     );
+    Ok(())
 }
 
 #[test]
-fn test_create_if_not_exists() {
+fn test_create_if_not_exists() -> Result<()> {
     // Arrange
     let temp_dir = get_temp_dir(hmap! {
         "src/__init__.py" => "",
@@ -189,7 +194,7 @@ fn test_create_if_not_exists() {
     });
 
     // Act
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed to create command");
+    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
     let assert = cmd
         .arg("--no-colors")
         .arg("check-file-pair")
@@ -223,6 +228,7 @@ fn test_create_if_not_exists() {
             "tests/utils/test_logger.py",
         ]
     );
+    Ok(())
 }
 
 /// Test for `--create-if-not-exists` with `--dry-run` option.
@@ -230,7 +236,7 @@ fn test_create_if_not_exists() {
 /// If the files do not exist, they should not be created,
 /// but the output should indicate they would be created.
 #[test]
-fn test_create_if_not_exists_dry_run() {
+fn test_create_if_not_exists_dry_run() -> Result<()> {
     // Arrange
     let temp_dir = get_temp_dir(hmap! {
         "src/__init__.py" => "",
@@ -241,7 +247,7 @@ fn test_create_if_not_exists_dry_run() {
     });
 
     // Act
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed to create command");
+    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
     let assert = cmd
         .arg("--no-colors")
         .arg("--dry-run")
@@ -274,4 +280,5 @@ fn test_create_if_not_exists_dry_run() {
             "tests/test_main.py",
         ]
     );
+    Ok(())
 }
