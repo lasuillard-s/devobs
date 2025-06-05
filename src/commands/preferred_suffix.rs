@@ -12,7 +12,7 @@ pub struct CommandArgs {
 pub(crate) fn command(args: CommandArgs, _global_opts: GlobalOpts) -> Result<()> {
     // Here you would implement the logic to check the file pair.
     // For demonstration, we will just log the file name.
-    log::info!("Checking file: {}", args.file);
+    log::debug!("Checking file: {}", args.file);
 
     // Simulate some processing
     if args.file.is_empty() {
