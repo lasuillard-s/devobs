@@ -2,8 +2,7 @@ use assert_cmd::Command;
 use insta::assert_snapshot;
 use sugars::hmap;
 
-use crate::{test_helpers::{first_line, get_temp_dir, list_dir, normalize_console_output,
-                           parse_output},
+use crate::{helpers::{first_line, get_temp_dir, list_dir, normalize_console_output, parse_output},
             to_str};
 
 #[test]

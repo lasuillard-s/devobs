@@ -57,7 +57,7 @@ mod tests {
     use sugars::hmap;
 
     use super::*;
-    use crate::test_helpers::get_temp_dir;
+    use crate::helpers::get_temp_dir;
 
     #[test]
     fn test_touch_file() -> Result<()> {

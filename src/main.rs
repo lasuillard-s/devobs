@@ -1,7 +1,7 @@
 mod commands;
 #[cfg(test)]
-#[path = "../tests/test_helpers.rs"]
-pub(crate) mod test_helpers;
+#[path = "../tests/helpers.rs"]
+pub(crate) mod helpers;
 mod utils;
 
 use std::{cmp::max, env::current_dir};
