@@ -58,12 +58,12 @@ mod tests {
     use anyhow::Result;
 
     use super::*;
-    use crate::test_helpers::temp_git_dir;
+    use crate::test_helpers::get_temp_dir;
 
     #[test]
     fn test_touch_file() -> Result<()> {
         // Arrange
-        let temp_dir = temp_git_dir(None);
+        let temp_dir = get_temp_dir(None);
         let file_path = temp_dir.path().join("test.txt");
         assert!(!file_path.exists());
 
@@ -78,7 +78,7 @@ mod tests {
     #[test]
     fn test_touch_file_nested_directory() -> Result<()> {
         // Arrange
-        let temp_dir = temp_git_dir(None);
+        let temp_dir = get_temp_dir(None);
         let nested_file_path = temp_dir.path().join("nested/dir/test.txt");
         assert!(!nested_file_path.exists());
 
@@ -93,7 +93,7 @@ mod tests {
     #[test]
     fn test_touch_existing_file() -> Result<()> {
         // Arrange
-        let temp_dir = temp_git_dir(Some(HashMap::<_, _>::from_iter(vec![("test.txt", None)])));
+        let temp_dir = get_temp_dir(Some(HashMap::<_, _>::from_iter(vec![("test.txt", None)])));
         let file_path = temp_dir.path().join("test.txt");
         assert!(file_path.exists());
 
@@ -108,7 +108,7 @@ mod tests {
     #[test]
     fn test_expand_glob_simple() {
         // Arrange
-        let temp_dir = temp_git_dir(Some(HashMap::<_, _>::from_iter(vec![
+        let temp_dir = get_temp_dir(Some(HashMap::<_, _>::from_iter(vec![
             ("file1.txt", None),
             ("file2.txt", None),
             ("other.log", None),
@@ -128,7 +128,7 @@ mod tests {
     #[test]
     fn test_expand_glob_multiple_patterns() {
         // Arrange
-        let temp_dir = temp_git_dir(Some(HashMap::<_, _>::from_iter(vec![
+        let temp_dir = get_temp_dir(Some(HashMap::<_, _>::from_iter(vec![
             ("file1.txt", None),
             ("file2.txt", None),
             ("other.log", None),
@@ -151,7 +151,7 @@ mod tests {
     #[test]
     fn test_expand_glob_recursive() {
         // Arrange
-        let temp_dir = temp_git_dir(Some(HashMap::<_, _>::from_iter(vec![
+        let temp_dir = get_temp_dir(Some(HashMap::<_, _>::from_iter(vec![
             ("file1.txt", None),
             ("file2.txt", None),
             ("subdir/nested.txt", None),
@@ -175,7 +175,7 @@ mod tests {
     #[test]
     fn test_list_files_with_exclude() {
         // Arrange
-        let temp_dir = temp_git_dir(Some(HashMap::<_, _>::from_iter(vec![
+        let temp_dir = get_temp_dir(Some(HashMap::<_, _>::from_iter(vec![
             ("file1.txt", None),
             ("file2.txt", None),
             ("file3.txt", None),
@@ -195,7 +195,7 @@ mod tests {
     #[test]
     fn test_list_files_recursive_with_exclude() {
         // Arrange
-        let temp_dir = temp_git_dir(Some(HashMap::<_, _>::from_iter(vec![
+        let temp_dir = get_temp_dir(Some(HashMap::<_, _>::from_iter(vec![
             ("file1.txt", None),
             ("file2.txt", None),
             ("file3.txt", None),
@@ -227,7 +227,7 @@ mod tests {
     #[test]
     fn test_list_files_empty_patterns() {
         // Arrange
-        let temp_dir = temp_git_dir(Some(HashMap::<_, _>::from_iter(vec![
+        let temp_dir = get_temp_dir(Some(HashMap::<_, _>::from_iter(vec![
             ("file1.txt", None),
             ("file2.txt", None),
         ])));

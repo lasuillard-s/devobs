@@ -3,12 +3,12 @@ use std::collections::HashMap;
 use assert_cmd::Command;
 use insta::assert_snapshot;
 
-use crate::test_helpers::{first_line, list_dir, parse_output, temp_git_dir};
+use crate::test_helpers::{first_line, get_temp_dir, list_dir, parse_output};
 
 #[test]
 fn test_empty_directory_no_error_no_output() {
     // Arrange
-    let temp_dir = temp_git_dir(None);
+    let temp_dir = get_temp_dir(None);
 
     // Act
     let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed to create command");
@@ -30,7 +30,7 @@ fn test_empty_directory_no_error_no_output() {
 #[test]
 fn test_forward_matching() {
     // Arrange
-    let temp_dir = temp_git_dir(Some(HashMap::<_, _>::from_iter(vec![
+    let temp_dir = get_temp_dir(Some(HashMap::<_, _>::from_iter(vec![
         ("src/__init__.py", None),
         ("src/main.py", None),
         ("src/utils/logger.py", None),
@@ -70,7 +70,7 @@ fn test_forward_matching() {
 #[test]
 fn test_backward_matching() {
     // Arrange
-    let temp_dir = temp_git_dir(Some(HashMap::<_, _>::from_iter(vec![
+    let temp_dir = get_temp_dir(Some(HashMap::<_, _>::from_iter(vec![
         ("src/__init__.py", None),
         ("src/main.py", None),
         ("tests/test_main.py", None),
@@ -112,7 +112,7 @@ fn test_backward_matching() {
 #[test]
 fn test_on_fully_populated_directory() {
     // Arrange
-    let temp_dir = temp_git_dir(Some(HashMap::<_, _>::from_iter(vec![
+    let temp_dir = get_temp_dir(Some(HashMap::<_, _>::from_iter(vec![
         ("src/__init__.py", None),
         ("src/apps/posts/migrations/__init__.py", None),
         ("src/apps/posts/migrations/0001_initial.py", None),
@@ -160,7 +160,7 @@ fn test_on_fully_populated_directory() {
 #[test]
 fn test_create_if_not_exists() {
     // Arrange
-    let temp_dir = temp_git_dir(Some(HashMap::<_, _>::from_iter(vec![
+    let temp_dir = get_temp_dir(Some(HashMap::<_, _>::from_iter(vec![
         ("src/__init__.py", None),
         ("src/main.py", None),
         ("src/utils/logger.py", None),
@@ -207,7 +207,7 @@ fn test_create_if_not_exists() {
 #[test]
 fn test_create_if_not_exists_dry_run() {
     // Arrange
-    let temp_dir = temp_git_dir(Some(HashMap::<_, _>::from_iter(vec![
+    let temp_dir = get_temp_dir(Some(HashMap::<_, _>::from_iter(vec![
         ("src/__init__.py", None),
         ("src/main.py", None),
         ("src/utils/logger.py", None),

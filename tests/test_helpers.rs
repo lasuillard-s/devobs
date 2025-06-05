@@ -3,22 +3,14 @@ use std::{collections::HashMap, fs::create_dir_all, path::Path, process::Output}
 
 use tempfile::tempdir;
 
-/// Creates a temporary Git repository with the specified files.
+/// Creates a temporary directory files populated.
 ///
 /// The `files` parameter is a map where the key is the file path (relative to the temp directory)
 /// and the value representing the file content. If the value is `None`, the file
 /// will be created empty.
-pub(crate) fn temp_git_dir(files: Option<HashMap<&str, Option<&str>>>) -> tempfile::TempDir {
+pub(crate) fn get_temp_dir(files: Option<HashMap<&str, Option<&str>>>) -> tempfile::TempDir {
     let temp_dir = tempdir().expect("Failed to create temp dir");
     let dir_path = temp_dir.path();
-
-    // Move to the temp directory and run initialize a new Git repository
-    std::process::Command::new("git")
-        .arg("init")
-        .current_dir(dir_path)
-        .status()
-        .expect("Failed to execute git init");
-
     for (path, content) in files.unwrap_or_default() {
         let full_path = dir_path.join(&path);
         if full_path.ends_with("/") {
