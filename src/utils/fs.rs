@@ -53,9 +53,8 @@ pub(crate) fn expand_glob(from: &Path, patterns: &[String]) -> Vec<PathBuf> {
 
 #[cfg(test)]
 mod tests {
-    use std::collections::HashMap;
-
     use anyhow::Result;
+    use sugars::hmap;
 
     use super::*;
     use crate::test_helpers::get_temp_dir;
@@ -63,7 +62,7 @@ mod tests {
     #[test]
     fn test_touch_file() -> Result<()> {
         // Arrange
-        let temp_dir = get_temp_dir(None);
+        let temp_dir = get_temp_dir(hmap! {});
         let file_path = temp_dir.path().join("test.txt");
         assert!(!file_path.exists());
 
@@ -78,7 +77,7 @@ mod tests {
     #[test]
     fn test_touch_file_nested_directory() -> Result<()> {
         // Arrange
-        let temp_dir = get_temp_dir(None);
+        let temp_dir = get_temp_dir(hmap! {});
         let nested_file_path = temp_dir.path().join("nested/dir/test.txt");
         assert!(!nested_file_path.exists());
 
@@ -93,7 +92,7 @@ mod tests {
     #[test]
     fn test_touch_existing_file() -> Result<()> {
         // Arrange
-        let temp_dir = get_temp_dir(Some(HashMap::<_, _>::from_iter(vec![("test.txt", None)])));
+        let temp_dir = get_temp_dir(hmap! {"test.txt" => ""});
         let file_path = temp_dir.path().join("test.txt");
         assert!(file_path.exists());
 
@@ -108,11 +107,10 @@ mod tests {
     #[test]
     fn test_expand_glob_simple() {
         // Arrange
-        let temp_dir = get_temp_dir(Some(HashMap::<_, _>::from_iter(vec![
-            ("file1.txt", None),
-            ("file2.txt", None),
-            ("other.log", None),
-        ])));
+        let temp_dir = get_temp_dir(hmap! {            "file1.txt" => "",
+                "file2.txt" => "",
+                "other.log" => "",
+        });
         let dir_path = temp_dir.path();
 
         // Act
@@ -128,11 +126,11 @@ mod tests {
     #[test]
     fn test_expand_glob_multiple_patterns() {
         // Arrange
-        let temp_dir = get_temp_dir(Some(HashMap::<_, _>::from_iter(vec![
-            ("file1.txt", None),
-            ("file2.txt", None),
-            ("other.log", None),
-        ])));
+        let temp_dir = get_temp_dir(hmap! {
+            "file1.txt" => "",
+            "file2.txt" => "",
+            "other.log" => "",
+        });
         let dir_path = temp_dir.path();
 
         // Act
@@ -151,11 +149,11 @@ mod tests {
     #[test]
     fn test_expand_glob_recursive() {
         // Arrange
-        let temp_dir = get_temp_dir(Some(HashMap::<_, _>::from_iter(vec![
-            ("file1.txt", None),
-            ("file2.txt", None),
-            ("subdir/nested.txt", None),
-        ])));
+        let temp_dir = get_temp_dir(hmap! {
+            "file1.txt" => "",
+            "file2.txt" => "",
+            "subdir/nested.txt" => "",
+        });
         let dir_path = temp_dir.path();
 
         // Act
@@ -175,11 +173,11 @@ mod tests {
     #[test]
     fn test_list_files_with_exclude() {
         // Arrange
-        let temp_dir = get_temp_dir(Some(HashMap::<_, _>::from_iter(vec![
-            ("file1.txt", None),
-            ("file2.txt", None),
-            ("file3.txt", None),
-        ])));
+        let temp_dir = get_temp_dir(hmap! {
+            "file1.txt" => "",
+            "file2.txt" => "",
+            "file3.txt" => "",
+        });
         let dir_path = temp_dir.path();
 
         // Act
@@ -195,14 +193,14 @@ mod tests {
     #[test]
     fn test_list_files_recursive_with_exclude() {
         // Arrange
-        let temp_dir = get_temp_dir(Some(HashMap::<_, _>::from_iter(vec![
-            ("file1.txt", None),
-            ("file2.txt", None),
-            ("file3.txt", None),
-            ("other.log", None),
-            ("subdir/nested.txt", None),
-            ("subdir/nested.log", None),
-        ])));
+        let temp_dir = get_temp_dir(hmap! {
+            "file1.txt" => "",
+            "file2.txt" => "",
+            "file3.txt" => "",
+            "other.log" => "",
+            "subdir/nested.txt" => "",
+            "subdir/nested.log" => "",
+        });
         let dir_path = temp_dir.path();
 
         // Act
@@ -227,10 +225,10 @@ mod tests {
     #[test]
     fn test_list_files_empty_patterns() {
         // Arrange
-        let temp_dir = get_temp_dir(Some(HashMap::<_, _>::from_iter(vec![
-            ("file1.txt", None),
-            ("file2.txt", None),
-        ])));
+        let temp_dir = get_temp_dir(hmap! {
+            "file1.txt" => "",
+            "file2.txt" => "",
+        });
         let dir_path = temp_dir.path();
 
         // Act

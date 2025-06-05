@@ -1,11 +1,11 @@
-use std::{collections::HashMap,
-          env::current_dir,
+use std::{env::current_dir,
           path::{PathBuf, absolute}};
 
 use anyhow::{Result, anyhow, bail};
 use clap::Args;
 use regex::{self, Regex};
 use strfmt::strfmt;
+use sugars::hmap;
 
 use crate::{GlobalOpts,
             utils::fs::{list_files, touch_file}};
@@ -73,16 +73,16 @@ pub(crate) fn command(args: CommandArgs, global_opts: GlobalOpts) -> Result<()> 
     let cwd = current_dir()?;
 
     // Prepare base variables for substitution
-    let mut base_vars = HashMap::new();
-    base_vars.insert("cwd".to_string(), cwd.to_str().unwrap());
-    base_vars.insert("from".to_string(), from.to_str().unwrap());
-    base_vars.insert("to".to_string(), to.to_str().unwrap());
+    let base_vars = hmap! {
+        "cwd".to_string() => cwd.to_str().unwrap(),
+        "from".to_string() => from.to_str().unwrap(),
+        "to".to_string() => to.to_str().unwrap(),
+    };
     log::debug!("Prepared base variables: {base_vars:?}");
 
     for path in list_files(&from, &args.include, &args.exclude) {
         log::trace!("Checking file {}", path.display());
 
-        let mut vars = base_vars.clone();
         let filename = path.file_name().expect("Failed to get file name");
         let stem = path
             .file_stem()
@@ -104,18 +104,28 @@ pub(crate) fn command(args: CommandArgs, global_opts: GlobalOpts) -> Result<()> 
             .to_string();
 
         // Prepare variables for substitution
+        let mut vars = base_vars.clone();
         vars.insert("stem".to_string(), stem);
         vars.insert("extension".to_string(), extension);
         vars.insert("relative_from".to_string(), &relative_from);
         vars.insert("filename".to_string(), filename.to_str().unwrap());
+
+        // Populate from user-provided filename regex
         if let Some(ref regex) = args.filename_regex {
-            let captures = regex.captures(filename.to_str().unwrap()).unwrap();
-            for (name, value) in regex
-                .capture_names()
-                .flatten()
-                .filter_map(|n| Some((n, captures.name(n)?.as_str())))
-            {
-                vars.insert(name.to_string(), value);
+            if let Some(captures) = regex.captures(filename.to_str().unwrap()) {
+                for (name, value) in regex
+                    .capture_names()
+                    .flatten()
+                    .filter_map(|n| Some((n, captures.name(n)?.as_str())))
+                {
+                    vars.insert(name.to_string(), value);
+                }
+            } else {
+                log::warn!(
+                    "Filename regex did not match for file {}: {}",
+                    path.display(),
+                    filename.to_str().unwrap()
+                );
             }
         }
         log::debug!("Prepared substitution variables for file {path:?}: {vars:?}");

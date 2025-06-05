@@ -12,6 +12,7 @@ simplelog = "0.12.2"
 strfmt = "0.2.4"
 tokio = { version = "1.45.1", features = ["full"] }
 anyhow = "1.0.86"
+sugars = "3.0.1"
 
 [dev-dependencies]
 assert_cmd = "2.0.17"

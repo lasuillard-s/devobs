@@ -274,6 +274,7 @@ dependencies = [
  "rstest",
  "simplelog",
  "strfmt",
+ "sugars",
  "tempfile",
  "tokio",
 ]
@@ -1465,6 +1466,12 @@ name = "subtle"
 version = "2.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "13c2bddecc57b384dee18652358fb23172facb8a2c51ccc10d74c157bdea3292"
+
+[[package]]
+name = "sugars"
+version = "3.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cc0db74f9ee706e039d031a560bd7d110c7022f016051b3d33eeff9583e3e67a"
 
 [[package]]
 name = "syn"

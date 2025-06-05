@@ -1,28 +1,34 @@
-use std::collections::HashMap;
-
 use assert_cmd::Command;
 use insta::assert_snapshot;
+use sugars::hmap;
 
-use crate::test_helpers::{first_line, get_temp_dir, list_dir, parse_output};
+use crate::{test_helpers::{first_line, get_temp_dir, list_dir, normalize_console_output,
+                           parse_output},
+            to_str};
 
 #[test]
 fn test_empty_directory_no_error_no_output() {
     // Arrange
-    let temp_dir = get_temp_dir(None);
+    let temp_dir = get_temp_dir(hmap! {});
 
     // Act
     let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed to create command");
     let assert = cmd
         .arg("--no-colors")
         .arg("check-file-pair")
-        .args(&["--from", temp_dir.path().join("src").to_str().unwrap()])
-        .args(&["--to", temp_dir.path().join("tests").to_str().unwrap()])
+        .args(&["--from", to_str!(temp_dir.path().join("src"))])
+        .args(&["--to", to_str!(temp_dir.path().join("tests"))])
         .assert();
 
     // Assert
     let result = assert.success().code(0);
     let (stdout, stderr) = parse_output(result.get_output());
-    assert_snapshot!(stdout.replace(temp_dir.path().to_str().unwrap(), "<temp_dir>"));
+    assert_snapshot!(normalize_console_output(
+        stdout,
+        hmap! {
+            to_str!(temp_dir.path()) => "<temp_dir>"
+        }
+    ));
     assert_eq!(stderr, "");
     assert_eq!(list_dir(temp_dir.path()), vec![] as Vec<String>);
 }
@@ -30,20 +36,20 @@ fn test_empty_directory_no_error_no_output() {
 #[test]
 fn test_forward_matching() {
     // Arrange
-    let temp_dir = get_temp_dir(Some(HashMap::<_, _>::from_iter(vec![
-        ("src/__init__.py", None),
-        ("src/main.py", None),
-        ("src/utils/logger.py", None),
-        ("src/utils/slack/template.py", None),
-    ])));
+    let temp_dir = get_temp_dir(hmap! {
+        "src/__init__.py" => "",
+        "src/main.py" => "",
+        "src/utils/logger.py" => "",
+        "src/utils/slack/template.py" => "",
+    });
 
     // Act
     let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed to create command");
     let assert = cmd
         .arg("--no-colors")
         .arg("check-file-pair")
-        .args(&["--from", temp_dir.path().join("src").to_str().unwrap()])
-        .args(&["--to", temp_dir.path().join("tests").to_str().unwrap()])
+        .args(&["--from", to_str!(temp_dir.path().join("src"))])
+        .args(&["--to", to_str!(temp_dir.path().join("tests"))])
         .args(&["--include", "**/*.py"])
         .args(&["--expect", "{to}/{relative_from}/test_{filename}"])
         .assert();
@@ -51,7 +57,12 @@ fn test_forward_matching() {
     // Assert
     let result = assert.failure().code(1);
     let (stdout, stderr) = parse_output(result.get_output());
-    assert_snapshot!(stdout.replace(temp_dir.path().to_str().unwrap(), "<temp_dir>"));
+    assert_snapshot!(normalize_console_output(
+        stdout,
+        hmap! {
+            to_str!(temp_dir.path()) => "<temp_dir>"
+        }
+    ));
     assert_eq!(
         first_line(stderr),
         "Error: There are 4 missing files. Use `--create-if-not-exists` to create them."
@@ -70,21 +81,21 @@ fn test_forward_matching() {
 #[test]
 fn test_backward_matching() {
     // Arrange
-    let temp_dir = get_temp_dir(Some(HashMap::<_, _>::from_iter(vec![
-        ("src/__init__.py", None),
-        ("src/main.py", None),
-        ("tests/test_main.py", None),
-        ("tests/utils/slack/test_template.py", None),
-        ("tests/utils/test_logger.py", None),
-    ])));
+    let temp_dir = get_temp_dir(hmap! {
+        "src/__init__.py" => "",
+        "src/main.py" => "",
+        "tests/test_main.py" => "",
+        "tests/utils/slack/test_template.py" => "",
+        "tests/utils/test_logger.py" => "",
+    });
 
     // Act
     let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed to create command");
     let assert = cmd
         .arg("--no-colors")
         .arg("check-file-pair")
-        .args(&["--from", temp_dir.path().join("tests").to_str().unwrap()])
-        .args(&["--to", temp_dir.path().join("src").to_str().unwrap()])
+        .args(&["--from", to_str!(temp_dir.path().join("tests"))])
+        .args(&["--to", to_str!(temp_dir.path().join("src"))])
         .args(&["--include", "**/*.py"])
         .args(&["--filename-regex", "^test_(?P<filename>.*)$"])
         .assert();
@@ -92,7 +103,12 @@ fn test_backward_matching() {
     // Assert
     let result = assert.failure().code(1);
     let (stdout, stderr) = parse_output(result.get_output());
-    assert_snapshot!(stdout.replace(temp_dir.path().to_str().unwrap(), "<temp_dir>"));
+    assert_snapshot!(normalize_console_output(
+        stdout,
+        hmap! {
+            to_str!(temp_dir.path()) => "<temp_dir>"
+        }
+    ));
     assert_eq!(
         first_line(stderr),
         "Error: There are 2 missing files. Use `--create-if-not-exists` to create them."
@@ -112,25 +128,25 @@ fn test_backward_matching() {
 #[test]
 fn test_on_fully_populated_directory() {
     // Arrange
-    let temp_dir = get_temp_dir(Some(HashMap::<_, _>::from_iter(vec![
-        ("src/__init__.py", None),
-        ("src/apps/posts/migrations/__init__.py", None),
-        ("src/apps/posts/migrations/0001_initial.py", None),
-        ("src/main.py", None),
-        ("src/utils/logger.py", None),
-        ("src/utils/slack/template.py", None),
-        ("tests/test_main.py", None),
-        ("tests/utils/slack/test_template.py", None),
-        ("tests/utils/test_logger.py", None),
-    ])));
+    let temp_dir = get_temp_dir(hmap! {
+        "src/__init__.py" => "",
+        "src/apps/posts/migrations/__init__.py" => "",
+        "src/apps/posts/migrations/0001_initial.py" => "",
+        "src/main.py" => "",
+        "src/utils/logger.py" => "",
+        "src/utils/slack/template.py" => "",
+        "tests/test_main.py" => "",
+        "tests/utils/slack/test_template.py" => "",
+        "tests/utils/test_logger.py" => "",
+    });
 
     // Act
     let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed to create command");
     let assert = cmd
         .arg("--no-colors")
         .arg("check-file-pair")
-        .args(&["--from", temp_dir.path().join("tests").to_str().unwrap()])
-        .args(&["--to", temp_dir.path().join("src").to_str().unwrap()])
+        .args(&["--from", to_str!(temp_dir.path().join("tests"))])
+        .args(&["--to", to_str!(temp_dir.path().join("src"))])
         .args(&["--include", "**/*.py"])
         .args(&["--exclude", "**/migrations/*.py"])
         .args(&["--filename-regex", "^test_(?P<filename>.*)$"])
@@ -139,7 +155,12 @@ fn test_on_fully_populated_directory() {
     // Assert
     let result = assert.success().code(0);
     let (stdout, stderr) = parse_output(result.get_output());
-    assert_snapshot!(stdout.replace(temp_dir.path().to_str().unwrap(), "<temp_dir>"));
+    assert_snapshot!(normalize_console_output(
+        stdout,
+        hmap! {
+            to_str!(temp_dir.path()) => "<temp_dir>"
+        }
+    ));
     assert_eq!(stderr, "");
     assert_eq!(
         list_dir(temp_dir.path()),
@@ -160,21 +181,21 @@ fn test_on_fully_populated_directory() {
 #[test]
 fn test_create_if_not_exists() {
     // Arrange
-    let temp_dir = get_temp_dir(Some(HashMap::<_, _>::from_iter(vec![
-        ("src/__init__.py", None),
-        ("src/main.py", None),
-        ("src/utils/logger.py", None),
-        ("src/utils/slack/template.py", None),
-        ("tests/test_main.py", None),
-    ])));
+    let temp_dir = get_temp_dir(hmap! {
+        "src/__init__.py" => "",
+        "src/main.py" => "",
+        "src/utils/logger.py" => "",
+        "src/utils/slack/template.py" => "",
+        "tests/test_main.py" => "",
+    });
 
     // Act
     let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed to create command");
     let assert = cmd
         .arg("--no-colors")
         .arg("check-file-pair")
-        .args(&["--from", temp_dir.path().join("src").to_str().unwrap()])
-        .args(&["--to", temp_dir.path().join("tests").to_str().unwrap()])
+        .args(&["--from", to_str!(temp_dir.path().join("src"))])
+        .args(&["--to", to_str!(temp_dir.path().join("tests"))])
         .args(&["--include", "**/*.py"])
         .args(&["--exclude", "**/_*.py"])
         .args(&["--expect", "{to}/{relative_from}/test_{filename}"])
@@ -184,7 +205,12 @@ fn test_create_if_not_exists() {
     // Assert
     let result = assert.failure().code(1);
     let (stdout, stderr) = parse_output(result.get_output());
-    assert_snapshot!(stdout.replace(temp_dir.path().to_str().unwrap(), "<temp_dir>"));
+    assert_snapshot!(normalize_console_output(
+        stdout,
+        hmap! {
+            to_str!(temp_dir.path()) => "<temp_dir>"
+        }
+    ));
     assert_eq!(first_line(stderr), "Error: Created 2 missing files.");
     assert_eq!(
         list_dir(temp_dir.path()),
@@ -207,13 +233,13 @@ fn test_create_if_not_exists() {
 #[test]
 fn test_create_if_not_exists_dry_run() {
     // Arrange
-    let temp_dir = get_temp_dir(Some(HashMap::<_, _>::from_iter(vec![
-        ("src/__init__.py", None),
-        ("src/main.py", None),
-        ("src/utils/logger.py", None),
-        ("src/utils/slack/template.py", None),
-        ("tests/test_main.py", None),
-    ])));
+    let temp_dir = get_temp_dir(hmap! {
+        "src/__init__.py" => "",
+        "src/main.py" => "",
+        "src/utils/logger.py" => "",
+        "src/utils/slack/template.py" => "",
+        "tests/test_main.py" => "",
+    });
 
     // Act
     let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed to create command");
@@ -221,8 +247,8 @@ fn test_create_if_not_exists_dry_run() {
         .arg("--no-colors")
         .arg("--dry-run")
         .arg("check-file-pair")
-        .args(&["--from", temp_dir.path().join("src").to_str().unwrap()])
-        .args(&["--to", temp_dir.path().join("tests").to_str().unwrap()])
+        .args(&["--from", to_str!(temp_dir.path().join("src"))])
+        .args(&["--to", to_str!(temp_dir.path().join("tests"))])
         .args(&["--include", "**/*.py"])
         .args(&["--exclude", "**/_*.py"])
         .args(&["--expect", "{to}/{relative_from}/test_{filename}"])
@@ -232,7 +258,12 @@ fn test_create_if_not_exists_dry_run() {
     // Assert
     let result = assert.failure().code(1);
     let (stdout, stderr) = parse_output(result.get_output());
-    assert_snapshot!(stdout.replace(temp_dir.path().to_str().unwrap(), "<temp_dir>"));
+    assert_snapshot!(normalize_console_output(
+        stdout,
+        hmap! {
+            to_str!(temp_dir.path()) => "<temp_dir>"
+        }
+    ));
     assert_eq!(first_line(stderr), "Error: Created 2 missing files.");
     assert_eq!(
         list_dir(temp_dir.path()),
