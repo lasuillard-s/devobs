@@ -121,7 +121,7 @@ mod tests {
         // Assert
         assert_eq!(
             txt_files,
-            vec![dir_path.join("file1.txt"), dir_path.join("file2.txt")]
+            &[dir_path.join("file1.txt"), dir_path.join("file2.txt")]
         );
         Ok(())
     }
@@ -143,7 +143,7 @@ mod tests {
         // Assert
         assert_eq!(
             all_files,
-            vec![
+            &[
                 dir_path.join("file1.txt"),
                 dir_path.join("file2.txt"),
                 dir_path.join("other.log"),
@@ -169,7 +169,7 @@ mod tests {
         // Assert
         assert_eq!(
             all_nested,
-            vec![
+            &[
                 dir_path.join("file1.txt"),
                 dir_path.join("file2.txt"),
                 dir_path.join("subdir/nested.txt"),
@@ -195,7 +195,7 @@ mod tests {
         // Assert
         assert_eq!(
             files,
-            vec![dir_path.join("file1.txt"), dir_path.join("file3.txt")]
+            &[dir_path.join("file1.txt"), dir_path.join("file3.txt")]
         );
         Ok(())
     }
@@ -224,7 +224,7 @@ mod tests {
         // Assert
         assert_eq!(
             files,
-            vec![
+            &[
                 dir_path.join("file1.txt"),
                 dir_path.join("file2.txt"),
                 dir_path.join("file3.txt"),

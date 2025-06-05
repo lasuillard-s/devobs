@@ -30,7 +30,7 @@ fn test_empty_directory_no_error_no_output() -> Result<()> {
         }
     ));
     assert_eq!(stderr, "");
-    assert_eq!(list_dir(temp_dir.path()), vec![] as Vec<String>);
+    assert_eq!(list_dir(temp_dir.path()), &[] as &[&str]);
     Ok(())
 }
 
@@ -70,7 +70,7 @@ fn test_forward_matching() -> Result<()> {
     );
     assert_eq!(
         list_dir(temp_dir.path()),
-        vec![
+        &[
             "src/__init__.py",
             "src/main.py",
             "src/utils/logger.py",
@@ -117,7 +117,7 @@ fn test_backward_matching() -> Result<()> {
     );
     assert_eq!(
         list_dir(temp_dir.path()),
-        vec![
+        &[
             "src/__init__.py",
             "src/main.py",
             "tests/test_main.py",
@@ -167,7 +167,7 @@ fn test_on_fully_populated_directory() -> Result<()> {
     assert_eq!(stderr, "");
     assert_eq!(
         list_dir(temp_dir.path()),
-        vec![
+        &[
             "src/__init__.py",
             "src/apps/posts/migrations/0001_initial.py",
             "src/apps/posts/migrations/__init__.py",
@@ -218,7 +218,7 @@ fn test_create_if_not_exists() -> Result<()> {
     assert_eq!(first_line(stderr), "Error: Created 2 missing files.");
     assert_eq!(
         list_dir(temp_dir.path()),
-        vec![
+        &[
             "src/__init__.py",
             "src/main.py",
             "src/utils/logger.py",
@@ -272,7 +272,7 @@ fn test_create_if_not_exists_dry_run() -> Result<()> {
     assert_eq!(first_line(stderr), "Error: Created 2 missing files.");
     assert_eq!(
         list_dir(temp_dir.path()),
-        vec![
+        &[
             "src/__init__.py",
             "src/main.py",
             "src/utils/logger.py",
