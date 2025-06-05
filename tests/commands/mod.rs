@@ -1,1 +1,1 @@
-mod check_file_pair;
+mod test_check_file_pair;

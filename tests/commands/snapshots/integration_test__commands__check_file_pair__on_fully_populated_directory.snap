@@ -1,5 +1,0 @@
----
-source: tests/test_check_file_pair.rs
-expression: "stdout.replace(temp_dir.path().to_str().unwrap(), \"<temp_dir>\")"
----
-[INFO] Everything is fine, no missing files.

@@ -1,6 +1,6 @@
 ---
-source: tests/commands/check_file_pair.rs
-expression: "stdout.replace(temp_dir.path().to_str().unwrap(), \"<temp_dir>\")"
+source: tests/commands/test_check_file_pair.rs
+expression: "normalize_console_output(stdout, hmap!\n{ to_str!(temp_dir.path()) => \"<temp_dir>\" })"
 ---
 [WARN] Pair of file <temp_dir>/src/__init__.py does not exist: <temp_dir>/tests/test___init__.py
 [WARN] Pair of file <temp_dir>/src/main.py does not exist: <temp_dir>/tests/test_main.py
