@@ -46,7 +46,6 @@ struct GlobalOpts {
 #[derive(Subcommand, Debug, Clone)]
 enum Commands {
     CheckFilePair(crate::commands::check_file_pair::CommandArgs),
-    PreferredSuffix(crate::commands::preferred_suffix::CommandArgs),
 }
 
 // TODO(lasuillard): Customize log formatter
@@ -97,9 +96,6 @@ async fn _main(args: Cli) -> Result<()> {
     match args.command {
         Commands::CheckFilePair(args) => {
             crate::commands::check_file_pair::command(args, global_opts)
-        }
-        Commands::PreferredSuffix(args) => {
-            crate::commands::preferred_suffix::command(args, global_opts)
         }
     }
 }
