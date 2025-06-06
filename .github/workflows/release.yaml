@@ -1,15 +1,11 @@
 name: Release
 
 on:
-  # TODO(lasuillard): For testing; revert when ready to publish to PyPI
   push:
     branches:
-      - X-maturin-publish-to-pypi
-  # push:
-  #   branches:
-  #     - main
-  #   tags:
-  #     - v*
+      - main
+    tags:
+      - v*
 
 permissions: read-all
 
@@ -66,8 +62,7 @@ jobs:
       - build
       - sdist
     runs-on: ubuntu-latest
-    # TODO(lasuillard): For testing; revert when ready to publish to PyPI
-    # if: startsWith(github.ref, 'refs/tags/v')
+    if: startsWith(github.ref, 'refs/tags/v')
     timeout-minutes: 5
     permissions:
       contents: write
@@ -80,12 +75,11 @@ jobs:
       - name: Show artifacts
         run: ls -l --all --recursive dist
 
-      # TODO(lasuillard): For testing; revert when ready to publish to PyPI
-      # - name: Create release
-      #   uses: softprops/action-gh-release@v2
-      #   with:
-      #     generate_release_notes: true
-      #     files: dist/dist-*/devobs-*
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: dist/*
 
   publish-pypi:
     name: Publish to PyPI
@@ -107,7 +101,5 @@ jobs:
 
       - name: Publish release distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
-        # TODO(lasuillard): For testing; remove when ready to publish to PyPI
         with:
-          repository-url: https://test.pypi.org/legacy/
           skip-existing: true

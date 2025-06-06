@@ -1,7 +1,6 @@
 [package]
 name = "devobs"
-# TODO(lasuillard): Testing; revert the version to 0.1.0 when ready for release.
-version = "0.0.0"
+version = "0.1.0"
 edition = "2024"
 description = "CLI for obsessed developers."
 readme = "README.md"
