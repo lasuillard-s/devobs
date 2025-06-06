@@ -91,9 +91,8 @@ jobs:
       - name: Show artifacts
         run: ls -l --all --recursive dist
 
-      - name: Publish to PyPI
-        uses: PyO3/maturin-action@v1
+      - name: Publish release distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        # TODO(lasuillard): For testing; remove when ready to publish to PyPI
         with:
-          command: upload
-          # TODO(lasuillard): For testing; change it to PyPI when ready
-          args: --non-interactive --skip-existing --repository-url=https://test.pypi.org/legacy/ dist-*/*
+          repository-url: https://test.pypi.org/legacy/
