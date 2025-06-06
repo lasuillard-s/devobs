@@ -8,6 +8,3 @@ bindings = "bin"
 [[tool.maturin.targets]]
 name = "devobs"
 bindings = "bin"
-
-[[tool.maturin.targets]]
-name = "foo"
