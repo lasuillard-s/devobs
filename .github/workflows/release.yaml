@@ -95,4 +95,4 @@ jobs:
         with:
           command: upload
           # TODO(lasuillard): For testing; change it to PyPI when ready
-          args: --non-interactive --skip-existing --repository-url https://test.pypi.org/legacy/ dist-*/*
+          args: --non-interactive --skip-existing --repository-url=https://test.pypi.org/legacy/ dist-*/*
