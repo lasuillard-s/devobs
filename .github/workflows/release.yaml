@@ -1,14 +1,17 @@
 name: Release
 
 on:
+  # TODO(lasuillard): For testing; revert when ready to publish to PyPI
   push:
-    tags:
-      - v*
+    branches:
+      - X-maturin-publish-to-pypi
+  # push:
+  #   branches:
+  #     - main
+  #   tags:
+  #     - v*
 
 permissions: read-all
-
-env:
-  OUTPUT_DIR: dist
 
 jobs:
   build:
@@ -36,27 +39,23 @@ jobs:
       - name: Manage Rust cache
         uses: Swatinem/rust-cache@v2
 
-      - name: Build binary
-        id: build
-        run: |
-          cargo build --verbose --release --target ${{ matrix.target }}
+      - name: Build wheels
+        uses: PyO3/maturin-action@v1
+        with:
+          args: --release --out dist
 
-          mkdir ${{ env.OUTPUT_DIR }}
-          binary_path="${{ env.OUTPUT_DIR }}/devobs-${{ matrix.target }}"
-          mv target/${{ matrix.target }}/release/devobs "$binary_path"
-
-          echo "binary-path=${binary_path}" >> $GITHUB_OUTPUT
-
-      - name: Upload binary as artifact
+      - name: Upload wheels as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: dist-${{ matrix.target }}
-          path: ${{ steps.build.outputs.binary-path }}
+          name: wheels
+          path: dist
 
   release:
     name: Release
     needs: build
     runs-on: ubuntu-latest
+    # TODO(lasuillard): For testing; revert when ready to publish to PyPI
+    # if: startsWith(github.ref, 'refs/tags/v')
     timeout-minutes: 5
     permissions:
       contents: write
@@ -64,7 +63,7 @@ jobs:
       - name: Download binary artifacts
         uses: actions/download-artifact@v4
         with:
-          path: ${{ env.OUTPUT_DIR }}
+          name: wheels
 
       - name: Show artifacts
         run: ls -l --all --recursive dist
@@ -74,3 +73,26 @@ jobs:
         with:
           generate_release_notes: true
           files: dist/dist-*/devobs-*
+
+  publish-pypi:
+    name: Publish to PyPI
+    needs: release
+    runs-on: ubuntu-latest
+    environment: pypi
+    timeout-minutes: 5
+    permissions:
+      id-token: write
+    steps:
+      - name: Download binary artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: wheels
+
+      - name: Show artifacts
+        run: ls -l --all --recursive dist
+
+      - name: Publish release distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        # TODO(lasuillard): For testing; remove when ready to publish to PyPI
+        with:
+          repository-url: https://test.pypi.org/legacy/
