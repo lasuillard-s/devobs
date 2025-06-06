@@ -85,7 +85,7 @@ jobs:
       - name: Download binary artifacts
         uses: actions/download-artifact@v4
         with:
-          name: wheels
+          name: dist
 
       - name: Show artifacts
         run: ls -l --all --recursive dist
