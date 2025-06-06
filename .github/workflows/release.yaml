@@ -20,9 +20,7 @@ jobs:
       matrix:
         include:
           - platform: ubuntu-latest
-            target: x86_64-unknown-linux-musl
-          - platform: ubuntu-latest
-            target: x86_64-unknown-linux-gnu
+            target: x86_64
 
     name: Build (${{ matrix.target }})
     runs-on: ${{ matrix.platform }}
@@ -42,12 +40,13 @@ jobs:
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
-          args: --release --out dist
+          target: ${{ matrix.target }}
+          args: --release --out dist --sdist
 
       - name: Upload wheels as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: wheels
+          name: dist-${{ matrix.target }}
           path: dist
 
   release:
@@ -63,7 +62,7 @@ jobs:
       - name: Download binary artifacts
         uses: actions/download-artifact@v4
         with:
-          name: wheels
+          path: dist
 
       - name: Show artifacts
         run: ls -l --all --recursive dist
