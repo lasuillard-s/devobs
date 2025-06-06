@@ -1,0 +1,10 @@
+---
+source: tests/commands/test_check_file_pair.rs
+expression: "normalize_console_output(stdout, hmap!\n{ to_str!(temp_dir.path()) => \"<temp_dir>\" })"
+---
+[WARN] Filename regex did not match for file <temp_dir>/tests/_helpers.py: _helpers.py
+[WARN] Pair of file <temp_dir>/tests/_helpers.py does not exist: <temp_dir>/src/_helpers.py
+[WARN] Filename regex did not match for file <temp_dir>/tests/conftest.py: conftest.py
+[WARN] Pair of file <temp_dir>/tests/conftest.py does not exist: <temp_dir>/src/conftest.py
+[WARN] Pair of file <temp_dir>/tests/utils/slack/test_template.py does not exist: <temp_dir>/src/utils/slack/template.py
+[WARN] Pair of file <temp_dir>/tests/utils/test_logger.py does not exist: <temp_dir>/src/utils/logger.py

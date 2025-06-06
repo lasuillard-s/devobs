@@ -5,12 +5,19 @@ edition = "2024"
 
 [dependencies]
 clap = { version = "4.5.38", features = ["derive"] }
+glob = "0.3.2"
 log = "0.4.27"
+regex = "1.11.1"
 simplelog = "0.12.2"
+strfmt = "0.2.4"
 tokio = { version = "1.45.1", features = ["full"] }
+anyhow = "1.0.86"
+sugars = "3.0.1"
 
 [dev-dependencies]
-anyhow = "1.0.86"
+assert_cmd = "2.0.17"
+insta = "1.43.1"
 mockall = "0.13.0"
 reqwest = "0.12.5"
 rstest = "0.25.0"
+tempfile = "3.20.0"

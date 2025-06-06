@@ -5,7 +5,7 @@
     "ghcr.io/devcontainers-contrib/features/pre-commit:2": {}
   },
   "onCreateCommand": "./.devcontainer/onCreateCommand.sh",
-  "postAttachCommand": "pre-commit install",
+  "postAttachCommand": "./.devcontainer/postAttachCommand.sh",
   "customizations": {
     "vscode": {
       "extensions": [
