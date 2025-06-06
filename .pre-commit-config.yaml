@@ -11,6 +11,20 @@ repos:
       - id: trailing-whitespace
       - id: end-of-file-fixer
 
+  # TODO(lasuillard): For testing. Later need to be improved with config file support.
+  - repo: https://github.com/lasuillard/devobs
+    rev: v0.1.0
+    hooks:
+      # Require each commands to have a matching integration tests.
+      - id: devobs
+        pass_filenames: false
+        args:
+          - check-file-pair
+          - --from=src/commands
+          - --to=tests/commands
+          - --include='*.rs'
+          - --expect='{to}/{relative_from}/test_{filename}'
+
   - repo: local
     hooks:
       - id: cargo-fmt
