@@ -87,6 +87,8 @@ fn test_backward_matching() -> Result<()> {
         "src/__init__.py" => "",
         "src/main.py" => "",
         "tests/test_main.py" => "",
+        "tests/conftest.py" => "",
+        "tests/_helpers.py" => "",
         "tests/utils/slack/test_template.py" => "",
         "tests/utils/test_logger.py" => "",
     });
@@ -113,16 +115,18 @@ fn test_backward_matching() -> Result<()> {
     ));
     assert_eq!(
         first_line(stderr),
-        "Error: There are 2 missing files. Use `--create-if-not-exists` to create them."
+        "Error: There are 4 missing files. Use `--create-if-not-exists` to create them."
     );
     assert_eq!(
         list_dir(temp_dir.path()),
         &[
             "src/__init__.py",
             "src/main.py",
+            "tests/_helpers.py",
+            "tests/conftest.py",
             "tests/test_main.py",
             "tests/utils/slack/test_template.py",
-            "tests/utils/test_logger.py",
+            "tests/utils/test_logger.py"
         ]
     );
     Ok(())
@@ -139,6 +143,8 @@ fn test_on_fully_populated_directory() -> Result<()> {
         "src/utils/logger.py" => "",
         "src/utils/slack/template.py" => "",
         "tests/test_main.py" => "",
+        "tests/conftest.py" => "",
+        "tests/_helpers.py" => "",
         "tests/utils/slack/test_template.py" => "",
         "tests/utils/test_logger.py" => "",
     });
@@ -148,11 +154,11 @@ fn test_on_fully_populated_directory() -> Result<()> {
     let assert = cmd
         .arg("--no-colors")
         .arg("check-file-pair")
-        .args(&["--from", to_str!(temp_dir.path().join("tests"))])
-        .args(&["--to", to_str!(temp_dir.path().join("src"))])
+        .args(&["--from", to_str!(temp_dir.path().join("src"))])
+        .args(&["--to", to_str!(temp_dir.path().join("tests"))])
         .args(&["--include", "**/*.py"])
-        .args(&["--exclude", "**/migrations/*.py"])
-        .args(&["--filename-regex", "^test_(?P<filename>.*)$"])
+        .args(&["--exclude", "**/migrations/*.py", "**/_*.py"])
+        .args(&["--expect", "{to}/{relative_from}/test_{filename}"])
         .assert();
 
     // Assert
@@ -174,9 +180,11 @@ fn test_on_fully_populated_directory() -> Result<()> {
             "src/main.py",
             "src/utils/logger.py",
             "src/utils/slack/template.py",
+            "tests/_helpers.py",
+            "tests/conftest.py",
             "tests/test_main.py",
             "tests/utils/slack/test_template.py",
-            "tests/utils/test_logger.py",
+            "tests/utils/test_logger.py"
         ]
     );
     Ok(())
