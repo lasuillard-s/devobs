@@ -1,0 +1,7 @@
+# NOTE: We use pipx to run the devobs commands, otherwise it would require users
+#       to install Rust toolchain and dependencies to build the project.
+- id: devobs
+  name: devobs
+  description: Run devobs commands using pipx
+  language: system
+  entry: pipx run 'devobs~=0.1.0'
