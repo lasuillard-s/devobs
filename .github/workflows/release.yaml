@@ -2,13 +2,12 @@ name: Release
 
 on:
   push:
+    branches:
+      - main
     tags:
       - v*
 
 permissions: read-all
-
-env:
-  OUTPUT_DIR: dist
 
 jobs:
   build:
@@ -17,9 +16,7 @@ jobs:
       matrix:
         include:
           - platform: ubuntu-latest
-            target: x86_64-unknown-linux-musl
-          - platform: ubuntu-latest
-            target: x86_64-unknown-linux-gnu
+            target: x86_64
 
     name: Build (${{ matrix.target }})
     runs-on: ${{ matrix.platform }}
@@ -28,35 +25,44 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Rust
-        run: |
-          rustup show
-          rustup target add ${{ matrix.target }}
+      - name: Build wheels
+        uses: PyO3/maturin-action@v1
+        with:
+          target: ${{ matrix.target }}
+          args: --release --out dist
 
-      - name: Manage Rust cache
-        uses: Swatinem/rust-cache@v2
-
-      - name: Build binary
-        id: build
-        run: |
-          cargo build --verbose --release --target ${{ matrix.target }}
-
-          mkdir ${{ env.OUTPUT_DIR }}
-          binary_path="${{ env.OUTPUT_DIR }}/devobs-${{ matrix.target }}"
-          mv target/${{ matrix.target }}/release/devobs "$binary_path"
-
-          echo "binary-path=${binary_path}" >> $GITHUB_OUTPUT
-
-      - name: Upload binary as artifact
+      - name: Upload wheels as artifact
         uses: actions/upload-artifact@v4
         with:
           name: dist-${{ matrix.target }}
-          path: ${{ steps.build.outputs.binary-path }}
+          path: dist
+
+  sdist:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build sdist
+        uses: PyO3/maturin-action@v1
+        with:
+          command: sdist
+          args: --out dist
+
+      - name: Upload sdist as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sdist
+          path: dist
 
   release:
     name: Release
-    needs: build
+    needs:
+      - build
+      - sdist
     runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
     timeout-minutes: 5
     permissions:
       contents: write
@@ -64,7 +70,7 @@ jobs:
       - name: Download binary artifacts
         uses: actions/download-artifact@v4
         with:
-          path: ${{ env.OUTPUT_DIR }}
+          path: dist
 
       - name: Show artifacts
         run: ls -l --all --recursive dist
@@ -73,4 +79,27 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
-          files: dist/dist-*/devobs-*
+          files: dist/*
+
+  publish-pypi:
+    name: Publish to PyPI
+    needs: release
+    runs-on: ubuntu-latest
+    environment: pypi
+    timeout-minutes: 5
+    permissions:
+      id-token: write
+    steps:
+      - name: Download binary artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Show artifacts
+        run: ls -l --all --recursive dist
+
+      - name: Publish release distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          skip-existing: true

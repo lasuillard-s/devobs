@@ -14,3 +14,5 @@ cargo binstall -y --log-level debug \
     cargo-udeps \
     cargo-watch \
     cargo-insta
+
+pipx install maturin

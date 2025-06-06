@@ -2,6 +2,11 @@
 name = "devobs"
 version = "0.1.0"
 edition = "2024"
+description = "CLI for obsessed developers."
+readme = "README.md"
+authors = ["Yuchan Lee <lasuillard@gmail.com>"]
+homepage = "https://github.com/lasuillard/devobs"
+license = "MIT"
 
 [dependencies]
 clap = { version = "4.5.38", features = ["derive"] }
