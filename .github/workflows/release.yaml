@@ -23,7 +23,7 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Build wheels
         uses: PyO3/maturin-action@v1
@@ -42,7 +42,7 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Build sdist
         uses: PyO3/maturin-action@v1
