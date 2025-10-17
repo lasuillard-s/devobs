@@ -12,7 +12,7 @@ license = "MIT"
 clap = { version = "4.5.38", features = ["derive"] }
 glob = "0.3.2"
 log = "0.4.27"
-regex = "1.11.1"
+regex = "1.12.2"
 simplelog = "0.12.2"
 strfmt = "0.2.4"
 tokio = { version = "1.47.1", features = ["full"] }
