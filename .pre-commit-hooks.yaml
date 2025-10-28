@@ -5,3 +5,16 @@
   description: Run devobs commands using pipx
   language: system
   entry: pipx run 'devobs~=0.1.0'
+
+# Shortcuts for each commands for convenience
+- id: check-file-pair
+  name: check-file-pair
+  language: system
+  entry: pipx run 'devobs~=0.1.0' check-file-pair
+  # ? Example usage
+  # args:
+  #   - --from=src/commands
+  #   - --to=tests/commands
+  #   - --include='*.rs'
+  #   - --expect='{to}/{relative_from}/test_{filename}'
+  pass_filenames: false
