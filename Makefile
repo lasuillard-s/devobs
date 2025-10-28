@@ -28,7 +28,8 @@ update:  ## Update deps and tools
 .PHONY: update
 
 run:  ## Run development application
-	cargo watch -x 'run -- --log-level debug'
+	read -p "Enter command line arguments: " args
+	cargo watch --exec "run -- --log-level debug $$args"
 .PHONY: run
 
 
@@ -51,6 +52,5 @@ lint:  ## Run linters
 test:  ## Run tests
 	cargo llvm-cov nextest --workspace --lcov --output-path lcov.info \
 		&& cargo llvm-cov report --summary-only
-
 	cargo insta accept
 .PHONY: test
