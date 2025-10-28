@@ -6,7 +6,7 @@
   language: system
   entry: pipx run 'devobs~=0.1.0'
 
-# Shortcuts for each commands for convenience
+# Shortcuts for each command for convenience
 - id: check-file-pair
   name: check-file-pair
   language: system
