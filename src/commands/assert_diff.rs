@@ -4,11 +4,26 @@ use std::{fs::File,
           path::{PathBuf, absolute}};
 
 use anyhow::{Result, bail};
-use clap::Args;
+use clap::{Args, ValueEnum};
+use serde::Serialize;
 
 use crate::{GlobalOpts, utils::fs::list_files};
 
 const BUFFER_SIZE: usize = 8192;
+
+#[derive(ValueEnum, Clone, Debug, Serialize, Default)]
+#[serde(rename_all = "kebab-case")]
+enum OnCommandError {
+    /// Exit the program with the original error
+    #[default]
+    Propagate,
+
+    /// Exit the program with an error
+    Exit,
+
+    /// Ignore the error and continue
+    Ignore,
+}
 
 // NOTE: This command does not support dry-run mode, as there is no state change involved (except hash file).
 /// Check for matching file exists.
@@ -30,19 +45,14 @@ pub(crate) struct CommandArgs {
     #[arg(long, num_args = 1.., value_delimiter = ',')]
     exclude: Vec<String>,
 
-    /// Path to the temporary hash file to store and compare the computed hash.
-    ///
-    /// If file already exists, compute the hash and compare with the existing hash.
-    /// Otherwise, create a new hash file with the computed hash.
-    ///
-    /// If not provided, automatically generates a hash file at OS temporary location.
-    #[arg(long, default_value = None)]
-    hash_file: Option<PathBuf>,
+    /// Error handling strategy for the command.
+    #[arg(long, default_value_t, value_enum)]
+    on_command_error: OnCommandError,
 
-    /// By default, the hash file is deleted after comparison. If this flag is set,
-    /// the hash file will be preserved after comparison.
-    #[arg(long, default_value_t = false)]
-    preserve_hash_file: bool,
+    /// Command to run. First hash is computed before running the command, second hash after.
+    /// If the hashes differ, an error is raised.
+    #[arg(trailing_var_arg = true)]
+    command: Vec<String>,
 }
 
 pub(crate) fn command(args: CommandArgs, _global_opts: GlobalOpts) -> Result<()> {
@@ -51,47 +61,61 @@ pub(crate) fn command(args: CommandArgs, _global_opts: GlobalOpts) -> Result<()>
     if !target.exists() {
         bail!("Target path does not exist: {}", target.display());
     }
-    let temp_dir = std::env::temp_dir();
-    let hash_file = args.hash_file.unwrap_or_else(|| {
-        let mut path = temp_dir;
-        path.push("assert-diff.hash");
-        log::info!("Using hash file at: {}", path.display());
-        path
-    });
-    let preserve_hash_file = args.preserve_hash_file;
 
-    // Calculate directory hash
-    log::info!("Calculating directory hash for: {}", target.display());
-    let hash = calculate_directory_hash(&target, &args.include, &args.exclude)?;
-    log::info!("Directory hash: {}", hash);
+    // Calculate hash
+    log::debug!("Calculating hash for: {}", target.display());
+    let before_hash = calculate_directory_hash(&target, &args.include, &args.exclude)?;
+    log::info!("Hash before command run: {}", before_hash);
 
-    // If hash file does not exist, create it and exit
-    if !hash_file.exists() {
-        log::info!("Creating new hash file at: {}", hash_file.display());
-        std::fs::write(&hash_file, hash)?;
-        return Ok(());
+    // Run command
+    log::info!("Running command: {:?}", args.command);
+    let status = std::process::Command::new(&args.command[0])
+        .args(&args.command[1..])
+        .status()?;
+
+    log::info!("Command exited with status: {:?}", status);
+
+    // Check for exit code
+    if !status.success() {
+        match args.on_command_error {
+            OnCommandError::Exit => {
+                bail!("Command exited with non-zero status: {}", status);
+            }
+            OnCommandError::Ignore => {
+                log::warn!(
+                    "Command exited with non-zero status: {}, but ignoring as per configuration.",
+                    status
+                );
+            }
+            OnCommandError::Propagate => {
+                if let Some(code) = status.code() {
+                    log::warn!(
+                        "Command exited with non-zero status: {}, propagating exit code.",
+                        code
+                    );
+                    std::process::exit(code);
+                } else {
+                    bail!("Command terminated by signal");
+                }
+            }
+        }
     }
 
-    // If hash file exists, read the existing hash and compare
-    let existing_hash = std::fs::read_to_string(&hash_file)?;
-    log::info!("Existing hash: {}", existing_hash);
+    // Calculate hash again
+    let after_hash = calculate_directory_hash(&target, &args.include, &args.exclude)?;
+    log::info!("Hash after command run: {}", after_hash);
 
     // Compare hashes
-    if hash != existing_hash {
+    if before_hash != after_hash {
         bail!(
-            "Directory hash does not match the existing hash: {} != {}",
-            hash,
-            existing_hash
+            "Hash has changed after running command: {} != {}",
+            before_hash,
+            after_hash
         );
     }
 
-    // Optionally delete the hash file after comparison
-    if !preserve_hash_file {
-        log::info!("Deleting hash file at: {}", hash_file.display());
-        std::fs::remove_file(&hash_file)?;
-    }
-
-    log::info!("Directory hash matches the existing hash.");
+    // No changes detected
+    log::info!("Target hash matches, no changes detected.");
     Ok(())
 }
 
