@@ -68,12 +68,13 @@ pub(crate) fn command(args: CommandArgs, _global_opts: GlobalOpts) -> Result<()>
     log::info!("Hash before command run: {}", before_hash);
 
     // Run command
-    log::info!("Running command: {:?}", args.command);
-    let status = std::process::Command::new(&args.command[0])
+    log::info!("Running command as child process: {:?}", args.command);
+    let mut child = std::process::Command::new(&args.command[0])
         .args(&args.command[1..])
-        .status()?;
+        .spawn()?;
 
-    log::info!("Command exited with status: {:?}", status);
+    let status = child.wait()?;
+    log::debug!("Command exited with status: {:?}", status);
 
     // Check for exit code
     if !status.success() {
