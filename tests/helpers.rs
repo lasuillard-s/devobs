@@ -1,7 +1,7 @@
 #![allow(dead_code)]
-use std::{collections::HashMap, fs::create_dir_all, path::Path, process::Output};
+use std::{collections::HashMap, fs::create_dir_all, path::PathBuf, process::Output};
 
-use tempfile::tempdir;
+use tempfile::{TempDir, tempdir};
 
 #[macro_export]
 macro_rules! to_str {
@@ -30,7 +30,7 @@ pub(crate) fn normalize_console_output<S: AsRef<str>, T: ToString + std::fmt::Di
 /// The `files` parameter is a map where the key is the file path (relative to the temp directory)
 /// and the value representing the file content. If the value is `None`, the file
 /// will be created empty.
-pub(crate) fn get_temp_dir(files: HashMap<&str, &str>) -> tempfile::TempDir {
+pub(crate) fn get_temp_dir(files: HashMap<&str, &str>) -> TempDir {
     let temp_dir = tempdir().expect("Failed to create temp dir");
     let dir_path = temp_dir.path();
     for (path, content) in files {
@@ -53,12 +53,13 @@ pub(crate) fn get_temp_dir(files: HashMap<&str, &str>) -> tempfile::TempDir {
         std::fs::write(full_path, content).expect("Failed to write file");
     }
 
-    temp_dir // Return the temporary directory
+    // NOTE: Return the `TempDir` to ensure it lives long enough; it will be deleted when dropped
+    temp_dir
 }
 
 /// Helper function to list all files in a directory recursively,
 /// excluding `.git` directories and returning relative paths.
-pub(crate) fn list_dir(dir: &Path) -> Vec<String> {
+pub(crate) fn list_dir(dir: &PathBuf) -> Vec<String> {
     glob::glob(to_str!(dir.join("**/*")))
         .expect("Failed to create glob pattern")
         .filter_map(Result::ok)

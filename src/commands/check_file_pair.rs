@@ -12,7 +12,7 @@ use crate::{GlobalOpts,
 
 /// Check for matching file exists.
 #[derive(Args, Debug, Clone)]
-pub struct CommandArgs {
+pub(crate) struct CommandArgs {
     /// Directory to check for matching files.
     #[arg(long)]
     from: String,
@@ -33,6 +33,7 @@ pub struct CommandArgs {
     #[arg(long, num_args = 1.., value_delimiter = ',')]
     exclude: Vec<String>,
 
+    // * Don't forget to update below doc when modifying available variables
     /// Expected pattern for the file in the `to` directory.
     ///
     /// Variables available for substitution:
