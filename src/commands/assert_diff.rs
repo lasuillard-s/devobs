@@ -18,9 +18,6 @@ enum OnCommandError {
     #[default]
     Propagate,
 
-    /// Exit the program with an error
-    Exit,
-
     /// Ignore the error and continue
     Ignore,
 }
@@ -79,9 +76,6 @@ pub(crate) fn command(args: CommandArgs, _global_opts: GlobalOpts) -> Result<()>
     // Check for exit code
     if !status.success() {
         match args.on_command_error {
-            OnCommandError::Exit => {
-                bail!("Command exited with non-zero status: {}", status);
-            }
             OnCommandError::Ignore => {
                 log::warn!(
                     "Command exited with non-zero status: {}, but ignoring as per configuration.",
