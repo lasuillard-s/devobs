@@ -46,6 +46,7 @@ struct GlobalOpts {
 #[derive(Subcommand, Debug, Clone)]
 enum Commands {
     CheckFilePair(crate::commands::check_file_pair::CommandArgs),
+    AssertDiff(crate::commands::assert_diff::CommandArgs),
 }
 
 // TODO(lasuillard): Customize log formatter
@@ -90,13 +91,14 @@ async fn _main(args: Cli) -> Result<()> {
     )?;
 
     // Check the command and execute it
-    log::trace!("Parsed arguments: {args:?}");
-    log::trace!("Global options: {global_opts:?}");
-    log::trace!("Running command {:?} at {:?}", args.command, current_dir());
+    log::debug!("Parsed arguments: {args:?}");
+    log::debug!("Global options: {global_opts:?}");
+    log::debug!("Running command {:?} at {:?}", args.command, current_dir());
     match args.command {
         Commands::CheckFilePair(args) => {
             crate::commands::check_file_pair::command(args, global_opts)
         }
+        Commands::AssertDiff(args) => crate::commands::assert_diff::command(args, global_opts),
     }
 }
 

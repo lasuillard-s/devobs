@@ -1,0 +1,9 @@
+---
+source: tests/commands/test_assert_diff.rs
+expression: "normalize_console_output(stdout, hmap! { to_str!(dir_path) => \"<temp_dir>\" })"
+---
+[INFO] Hash before command run: d1fba762150c532c
+[INFO] Running command as child process: ["sh", "-c", "exit 42"]
+[WARN] Command exited with non-zero status: exit status: 42, but ignoring as per configuration.
+[INFO] Hash after command run: d1fba762150c532c
+[INFO] Target hash matches, no changes detected.

@@ -1,0 +1,9 @@
+---
+source: tests/commands/test_assert_diff.rs
+expression: "normalize_console_output(stdout, HashMap::<&str, &str>::new())"
+---
+[INFO] Hash before command run: d1fba762150c532c
+[INFO] Running command as child process: ["echo", "Hello, World!"]
+Hello, World!
+[INFO] Hash after command run: d1fba762150c532c
+[INFO] Target hash matches, no changes detected.

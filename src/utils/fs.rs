@@ -6,8 +6,9 @@ use glob::glob;
 
 /// Create the file if it does not exist, including its parent directories.
 pub(crate) fn touch_file(path: &Path) -> Result<()> {
+    log::trace!("Touching file: {}", path.display());
     if path.exists() {
-        log::debug!("File already exists: {}", path.display());
+        log::trace!("File already exists: {}", path.display());
         return Ok(());
     }
 
@@ -23,6 +24,12 @@ pub(crate) fn touch_file(path: &Path) -> Result<()> {
 
 /// List files in the `from` directory based on the include and exclude patterns.
 pub(crate) fn list_files(from: &Path, include: &[String], exclude: &[String]) -> Vec<PathBuf> {
+    log::trace!(
+        "Listing files in {} with include: {:?}, exclude: {:?}",
+        from.display(),
+        include,
+        exclude
+    );
     let mut include = expand_glob(from, include);
     let exclude = expand_glob(from, exclude);
 
@@ -37,6 +44,11 @@ pub(crate) fn list_files(from: &Path, include: &[String], exclude: &[String]) ->
 
 /// Expand glob patterns in the given directory, returning a flat list of paths.
 pub(crate) fn expand_glob(from: &Path, patterns: &[String]) -> Vec<PathBuf> {
+    log::trace!(
+        "Expanding glob patterns in {}: {:?}",
+        from.display(),
+        patterns
+    );
     patterns
         .iter()
         .flat_map(|s| {
@@ -63,7 +75,8 @@ mod tests {
     fn test_touch_file() -> Result<()> {
         // Arrange
         let temp_dir = get_temp_dir(hmap! {});
-        let file_path = temp_dir.path().join("test.txt");
+        let dir_path = temp_dir.path();
+        let file_path = dir_path.join("test.txt");
         assert!(!file_path.exists());
 
         // Act
@@ -78,7 +91,8 @@ mod tests {
     fn test_touch_file_nested_directory() -> Result<()> {
         // Arrange
         let temp_dir = get_temp_dir(hmap! {});
-        let nested_file_path = temp_dir.path().join("nested/dir/test.txt");
+        let dir_path = temp_dir.path();
+        let nested_file_path = dir_path.join("nested/dir/test.txt");
         assert!(!nested_file_path.exists());
 
         // Act
@@ -93,7 +107,8 @@ mod tests {
     fn test_touch_existing_file() -> Result<()> {
         // Arrange
         let temp_dir = get_temp_dir(hmap! {"test.txt" => ""});
-        let file_path = temp_dir.path().join("test.txt");
+        let dir_path = temp_dir.path();
+        let file_path = dir_path.join("test.txt");
         assert!(file_path.exists());
 
         // Act
