@@ -1,0 +1,5 @@
+---
+source: tests/commands/test_assert_diff.rs
+expression: "normalize_console_output(stderr, hmap! { to_str!(dir_path) => \"<temp_dir>\" })"
+---
+Error: Target path does not exist: <temp_dir>/target
