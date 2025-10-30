@@ -4,4 +4,17 @@
   name: devobs
   description: Run devobs commands using pipx
   language: system
-  entry: pipx run 'devobs~=0.1.0'
+  entry: pipx run devobs
+
+# Shortcuts for each command for convenience
+- id: check-file-pair
+  name: check-file-pair
+  language: system
+  entry: pipx run devobs check-file-pair
+  pass_filenames: false
+
+- id: assert-diff
+  name: assert-diff
+  language: system
+  entry: pipx run devobs assert-diff
+  pass_filenames: false
