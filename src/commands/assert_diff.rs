@@ -138,6 +138,12 @@ fn calculate_directory_hash(
     let mut hasher = DefaultHasher::new();
     let mut buffer = [0; BUFFER_SIZE];
     for path in list_files(&path, &include, &exclude) {
+        // ? Should take account directory structure in the hash?
+        if path.is_dir() {
+            log::debug!("Skipping directory: {}", path.display());
+            continue;
+        }
+
         log::debug!("Calculating hash for file: {}", path.display());
         let mut file = File::open(path)?;
         loop {
