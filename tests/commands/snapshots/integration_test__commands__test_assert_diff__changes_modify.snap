@@ -1,0 +1,7 @@
+---
+source: tests/commands/test_assert_diff.rs
+expression: "normalize_console_output(stdout, hmap! { to_str!(dir_path) => \"<temp_dir>\" })"
+---
+[INFO] Hash before command run: 3c4b0b00c86eac64
+[INFO] Running command as child process: ["sh", "-c", "echo 'Modified content' > target/file2.txt;"]
+[INFO] Hash after command run: 328ad4a7e5125ef3

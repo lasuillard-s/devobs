@@ -1,0 +1,5 @@
+---
+source: tests/commands/test_assert_diff.rs
+expression: "normalize_console_output(stderr, hmap! { to_str!(dir_path) => \"<temp_dir>\" })"
+---
+Error: Hash has changed after running command: 3c4b0b00c86eac64 != 328ad4a7e5125ef3
