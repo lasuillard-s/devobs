@@ -1,9 +1,9 @@
 use anyhow::Result;
-use assert_cmd::Command;
 use insta::assert_snapshot;
 use sugars::hmap;
 
-use crate::{helpers::{first_line, get_temp_dir, list_dir, normalize_console_output, parse_output},
+use crate::{helpers::{first_line, get_cmd, get_temp_dir, list_dir, normalize_console_output,
+                      parse_output},
             to_str};
 
 /// Test that an empty directory does not produce an error or output.
@@ -14,9 +14,8 @@ fn test_empty_directory_no_error_no_output() -> Result<()> {
     let dir_path = temp_dir.path();
 
     // Act
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = get_cmd();
     let assert = cmd
-        .arg("--no-colors")
         .arg("check-file-pair")
         .args(&["--from", to_str!(dir_path.join("src"))])
         .args(&["--to", to_str!(dir_path.join("tests"))])
@@ -49,9 +48,8 @@ fn test_forward_matching() -> Result<()> {
     let dir_path = temp_dir.path();
 
     // Act
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = get_cmd();
     let assert = cmd
-        .arg("--no-colors")
         .arg("check-file-pair")
         .args(&["--from", to_str!(dir_path.join("src"))])
         .args(&["--to", to_str!(dir_path.join("tests"))])
@@ -100,9 +98,8 @@ fn test_backward_matching() -> Result<()> {
     let dir_path = temp_dir.path();
 
     // Act
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = get_cmd();
     let assert = cmd
-        .arg("--no-colors")
         .arg("check-file-pair")
         .args(&["--from", to_str!(dir_path.join("tests"))])
         .args(&["--to", to_str!(dir_path.join("src"))])
@@ -158,9 +155,8 @@ fn test_on_fully_populated_directory() -> Result<()> {
     let dir_path = temp_dir.path();
 
     // Act
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = get_cmd();
     let assert = cmd
-        .arg("--no-colors")
         .arg("check-file-pair")
         .args(&["--from", to_str!(dir_path.join("src"))])
         .args(&["--to", to_str!(dir_path.join("tests"))])
@@ -212,9 +208,8 @@ fn test_create_if_not_exists() -> Result<()> {
     let dir_path = temp_dir.path();
 
     // Act
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = get_cmd();
     let assert = cmd
-        .arg("--no-colors")
         .arg("check-file-pair")
         .args(&["--from", to_str!(dir_path.join("src"))])
         .args(&["--to", to_str!(dir_path.join("tests"))])
@@ -266,9 +261,8 @@ fn test_create_if_not_exists_dry_run() -> Result<()> {
     let dir_path = temp_dir.path();
 
     // Act
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = get_cmd();
     let assert = cmd
-        .arg("--no-colors")
         .arg("--dry-run")
         .arg("check-file-pair")
         .args(&["--from", to_str!(dir_path.join("src"))])

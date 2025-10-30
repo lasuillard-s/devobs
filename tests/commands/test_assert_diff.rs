@@ -1,11 +1,10 @@
 use std::collections::HashMap;
 
 use anyhow::Result;
-use assert_cmd::Command;
 use insta::assert_snapshot;
 use sugars::hmap;
 
-use crate::{helpers::{get_temp_dir, list_dir, normalize_console_output, parse_output},
+use crate::{helpers::{get_cmd, get_temp_dir, list_dir, normalize_console_output, parse_output},
             to_str};
 
 /// Test command with an empty directory.
@@ -18,9 +17,8 @@ fn test_empty_directory() -> Result<()> {
     let dir_path = temp_dir.path();
 
     // Act
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = get_cmd();
     let assert = cmd
-        .arg("--no-colors")
         .arg("assert-diff")
         .args(&["--target", to_str!(dir_path.join("target"))])
         .arg("--")

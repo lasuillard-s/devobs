@@ -1,6 +1,7 @@
 #![allow(dead_code)]
 use std::{collections::HashMap, fs::create_dir_all, path::PathBuf, process::Output};
 
+use assert_cmd::Command;
 use tempfile::{TempDir, tempdir};
 
 #[macro_export]
@@ -10,6 +11,14 @@ macro_rules! to_str {
     };
 }
 
+/// Create a command for the current binary being tested.
+pub(crate) fn get_cmd() -> Command {
+    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed to create command");
+    cmd.arg("--no-colors");
+    cmd
+}
+
+/// Normalize console output by replacing dynamic content (e.g. temp dir) with static placeholders.
 pub(crate) fn normalize_console_output<S: AsRef<str>, T: ToString + std::fmt::Display>(
     output: S,
     replace: HashMap<T, &str>,
