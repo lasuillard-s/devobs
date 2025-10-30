@@ -6,24 +6,23 @@ exclude: |
   )
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v6.0.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
 
-  # TODO(lasuillard): For testing. Later need to be improved with config file support.
-  - repo: https://github.com/lasuillard/devobs
-    rev: v0.1.0
+  - repo: https://github.com/lasuillard-s/devobs
+    rev: main # Dogfooding; pin to a specific version when stable
     hooks:
-      # Require each commands to have a matching integration tests.
-      - id: devobs
-        pass_filenames: false
+      # Ensure each command has its test file pair
+      - id: check-file-pair
         args:
-          - check-file-pair
+          - --log-level
+          - trace
           - --from=src/commands
           - --to=tests/commands
-          - --include='*.rs'
-          - --expect='{to}/{relative_from}/test_{filename}'
+          - --include=*.rs
+          - --expect={to}/{relative_from}/test_{filename}
 
   - repo: local
     hooks:
