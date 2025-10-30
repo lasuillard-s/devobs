@@ -15,6 +15,7 @@ macro_rules! to_str {
 pub(crate) fn get_cmd() -> Command {
     let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed to create command");
     cmd.arg("--no-colors");
+    cmd.env("RUST_BACKTRACE", "0");
     cmd
 }
 
