@@ -1,4 +1,4 @@
-use std::{collections::HashMap, fs::create_dir};
+use std::collections::HashMap;
 
 use anyhow::Result;
 use assert_cmd::Command;
@@ -12,9 +12,10 @@ use crate::{helpers::{get_temp_dir, list_dir, normalize_console_output, parse_ou
 #[test]
 fn test_empty_directory() -> Result<()> {
     // Arrange
-    let temp_dir = get_temp_dir(hmap! {});
+    let temp_dir = get_temp_dir(hmap! {
+        "target/" => "",
+    });
     let dir_path = temp_dir.path();
-    create_dir(dir_path.join("target"))?;
 
     // Act
     let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;

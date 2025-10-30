@@ -28,15 +28,15 @@ pub(crate) fn normalize_console_output<S: AsRef<str>, T: ToString + std::fmt::Di
 /// Creates a temporary directory files populated.
 ///
 /// The `files` parameter is a map where the key is the file path (relative to the temp directory)
-/// and the value representing the file content. If the value is `None`, the file
-/// will be created empty.
+/// and the value representing the file content.
 pub(crate) fn get_temp_dir(files: HashMap<&str, &str>) -> TempDir {
     let temp_dir = tempdir().expect("Failed to create temp dir");
     let dir_path = temp_dir.path();
     for (path, content) in files {
         let full_path = dir_path.join(&path);
-        if full_path.ends_with("/") {
-            // If the path ends with a slash, create a directory
+
+        // If path ends with a slash, create a directory and continue
+        if path.ends_with("/") {
             create_dir_all(&full_path).expect("Failed to create directory");
             continue;
         }
@@ -49,7 +49,7 @@ pub(crate) fn get_temp_dir(files: HashMap<&str, &str>) -> TempDir {
         )
         .expect("Failed to create directory");
 
-        // Write the file with the specified content or an empty string if None
+        // Write the file with the specified content
         std::fs::write(full_path, content).expect("Failed to write file");
     }
 
