@@ -65,6 +65,35 @@ fn test_nonexistent_directory() -> Result<()> {
     Ok(())
 }
 
+/// If user provided no command, the program should exit with error.
+#[test]
+fn test_no_command_to_run() -> Result<()> {
+    // Arrange
+    let temp_dir = get_temp_dir(hmap! {
+        "target/" => "",
+    });
+    let dir_path = temp_dir.path();
+
+    // Act
+    let mut cmd = get_cmd();
+    let assert = cmd
+        .arg("assert-diff")
+        .args(&["--target", to_str!(dir_path.join("target"))])
+        .assert();
+
+    // Assert
+    let result = assert.failure().code(1);
+    let (stdout, stderr) = parse_output(result.get_output());
+    assert_eq!(stdout, "");
+    assert_snapshot!(normalize_console_output(
+        stderr,
+        hmap! {
+            to_str!(dir_path) => "<temp_dir>"
+        }
+    ));
+    Ok(())
+}
+
 /// Test with a populated directory but no changes after command execution.
 #[test]
 fn test_no_changes() -> Result<()> {

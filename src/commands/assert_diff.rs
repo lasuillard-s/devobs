@@ -59,6 +59,9 @@ pub(crate) fn command(args: CommandArgs, _global_opts: GlobalOpts) -> Result<()>
     if !target.exists() {
         bail!("Target path does not exist: {}", target.display());
     }
+    if args.command.is_empty() {
+        bail!("No command specified to run.");
+    }
 
     // Calculate hash
     log::debug!("Calculating hash for: {}", target.display());
