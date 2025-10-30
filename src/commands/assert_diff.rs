@@ -23,7 +23,8 @@ enum OnCommandError {
 }
 
 // NOTE: This command does not support dry-run mode, as there is no state change involved (except hash file).
-/// Check for matching file exists.
+/// Detects changes in the target directory by comparing file hashes before and after running a command.
+/// Raises an error if any changes are detected.
 #[derive(Args, Debug, Clone)]
 pub(crate) struct CommandArgs {
     /// Target directory to watch for changes.

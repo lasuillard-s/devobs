@@ -1,5 +1,5 @@
 #![allow(dead_code)]
-use std::{collections::HashMap, fs::create_dir_all, path::PathBuf, process::Output};
+use std::{collections::HashMap, fs::create_dir_all, path::Path, process::Output};
 
 use assert_cmd::Command;
 use tempfile::{TempDir, tempdir};
@@ -69,7 +69,7 @@ pub(crate) fn get_temp_dir(files: HashMap<&str, &str>) -> TempDir {
 
 /// Helper function to list all files in a directory recursively,
 /// excluding `.git` directories and returning relative paths.
-pub(crate) fn list_dir(dir: &PathBuf) -> Vec<String> {
+pub(crate) fn list_dir(dir: &Path) -> Vec<String> {
     glob::glob(to_str!(dir.join("**/*")))
         .expect("Failed to create glob pattern")
         .filter_map(Result::ok)
