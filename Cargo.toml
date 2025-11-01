@@ -21,7 +21,7 @@ sugars = "3.0.1"
 serde = { version = "1.0.228", features = ["derive"] }
 
 [dev-dependencies]
-assert_cmd = "2.0.17"
+assert_cmd = "2.1.1"
 insta = "1.43.1"
 mockall = "0.13.0"
 reqwest = "0.12.5"
