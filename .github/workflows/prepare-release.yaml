@@ -45,6 +45,7 @@ jobs:
         uses: peter-evans/create-pull-request@v7.0.8
         with:
           token: ${{ steps.generate-token.outputs.token }}
+          sign-commits: true
           title: Prepare release (${{ inputs.tag }})
           branch: release/${{ inputs.tag }}
           delete-branch: true
