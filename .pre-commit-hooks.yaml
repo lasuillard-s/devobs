@@ -1,5 +1,7 @@
 # NOTE: We use pipx to run the devobs commands, otherwise it would require users
 #       to install Rust toolchain and dependencies to build the project.
+# * This hook configuration file is updated separately from the latest release,
+# * so the version specified in entry may not always be the latest one.
 - id: devobs
   name: devobs
   description: Run devobs commands using pipx
