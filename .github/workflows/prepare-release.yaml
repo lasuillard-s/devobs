@@ -16,6 +16,13 @@ jobs:
       contents: write
       pull-requests: write
     steps:
+      - name: Check tag format
+        run: |
+          if [[ ! "${{ inputs.tag }}" =~ ^v ]]; then
+            echo "Tag must start with 'v'"
+            exit 1
+          fi
+
       - uses: actions/checkout@v5
 
       # https://github.com/killercup/cargo-edit/issues/864
