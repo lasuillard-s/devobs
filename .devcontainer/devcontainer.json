@@ -1,5 +1,5 @@
 {
-  "name": "lasuillard/devobs",
+  "name": "lasuillard-s/devobs",
   "image": "mcr.microsoft.com/devcontainers/rust:1-bookworm",
   "features": {
     "ghcr.io/devcontainers-extra/features/pre-commit:2": {}
