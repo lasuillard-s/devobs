@@ -32,7 +32,7 @@ jobs:
           brew install cargo-edit
           tag="${{ inputs.tag }}"
           tag_no_v="${tag#v}"
-          cargo set-version "${tag#v}"
+          cargo set-version "$tag_no_v"
 
       - name: Generate GitHub App token
         uses: actions/create-github-app-token@v2
