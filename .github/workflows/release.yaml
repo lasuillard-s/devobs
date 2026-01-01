@@ -63,7 +63,7 @@ jobs:
       contents: write
     steps:
       - name: Download binary artifacts
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           path: dist
 
@@ -88,7 +88,7 @@ jobs:
       id-token: write
     steps:
       - name: Download binary artifacts
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           path: dist
           merge-multiple: true
