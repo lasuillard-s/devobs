@@ -1,18 +1,15 @@
 {
   "name": "lasuillard-s/devobs",
-  "image": "mcr.microsoft.com/devcontainers/rust:1-bookworm",
+  "image": "mcr.microsoft.com/devcontainers/rust:trixie",
   "features": {
     "ghcr.io/devcontainers-extra/features/pre-commit:2": {}
   },
   "onCreateCommand": "./.devcontainer/onCreateCommand.sh",
-  "postAttachCommand": "./.devcontainer/postAttachCommand.sh",
+  "postStartCommand": "./.devcontainer/postStartCommand.sh",
+  "updateContentCommand": "./.devcontainer/updateContentCommand.sh",
   "customizations": {
     "vscode": {
       "extensions": [
-        "ldez.ignore-files",
-        "redhat.vscode-yaml",
-        "tamasfe.even-better-toml",
-        "streetsidesoftware.code-spell-checker",
         "EditorConfig.EditorConfig",
         "vadimcn.vscode-lldb",
         "rust-lang.rust-analyzer"
