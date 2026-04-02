@@ -1,6 +1,6 @@
 {
   "name": "lasuillard-s/devobs",
-  "image": "mcr.microsoft.com/devcontainers/rust:1-bookworm",
+  "image": "mcr.microsoft.com/devcontainers/rust:trixie",
   "features": {
     "ghcr.io/devcontainers-extra/features/pre-commit:2": {}
   },
