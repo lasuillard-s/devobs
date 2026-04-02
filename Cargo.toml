@@ -9,7 +9,7 @@ homepage = "https://github.com/lasuillard/devobs"
 license = "MIT"
 
 [dependencies]
-clap = { version = "4.5.38", features = ["derive"] }
+clap = { version = "4.5.60", features = ["derive"] }
 glob = "0.3.2"
 log = "0.4.27"
 regex = "1.12.2"
