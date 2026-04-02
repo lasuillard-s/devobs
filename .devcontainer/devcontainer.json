@@ -10,10 +10,6 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        "ldez.ignore-files",
-        "redhat.vscode-yaml",
-        "tamasfe.even-better-toml",
-        "streetsidesoftware.code-spell-checker",
         "EditorConfig.EditorConfig",
         "vadimcn.vscode-lldb",
         "rust-lang.rust-analyzer"
