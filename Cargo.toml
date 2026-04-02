@@ -9,7 +9,7 @@ homepage = "https://github.com/lasuillard/devobs"
 license = "MIT"
 
 [dependencies]
-clap = { version = "4.5.38", features = ["derive"] }
+clap = { version = "4.5.60", features = ["derive"] }
 glob = "0.3.2"
 log = "0.4.27"
 regex = "1.12.2"
@@ -22,8 +22,8 @@ serde = { version = "1.0.228", features = ["derive"] }
 
 [dev-dependencies]
 assert_cmd = "2.1.1"
-insta = "1.46.0"
+insta = "1.47.2"
 mockall = "0.14.0"
 reqwest = "0.13.1"
 rstest = "0.26.1"
-tempfile = "3.26.0"
+tempfile = "3.27.0"
