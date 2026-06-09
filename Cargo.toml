@@ -24,6 +24,6 @@ serde = { version = "1.0.228", features = ["derive"] }
 assert_cmd = "=2.2.2"
 insta = "=1.47.2"
 mockall = "=0.14.0"
-reqwest = "=0.13.3"
+reqwest = "=0.13.4"
 rstest = "=0.26.1"
 tempfile = "=3.27.0"
