@@ -20,9 +20,9 @@ fn test_empty_directory() -> Result<()> {
     let mut cmd = get_cmd();
     let assert = cmd
         .arg("assert-diff")
-        .args(&["--target", to_str!(dir_path.join("target"))])
+        .args(["--target", to_str!(dir_path.join("target"))])
         .arg("--")
-        .args(&["echo", "Hello, World!"])
+        .args(["echo", "Hello, World!"])
         .assert();
 
     // Assert
@@ -47,9 +47,9 @@ fn test_nonexistent_directory() -> Result<()> {
     let mut cmd = get_cmd();
     let assert = cmd
         .arg("assert-diff")
-        .args(&["--target", to_str!(dir_path.join("target"))])
+        .args(["--target", to_str!(dir_path.join("target"))])
         .arg("--")
-        .args(&["echo", "Hello, World!"])
+        .args(["echo", "Hello, World!"])
         .assert();
 
     // Assert
@@ -78,7 +78,7 @@ fn test_no_command_to_run() -> Result<()> {
     let mut cmd = get_cmd();
     let assert = cmd
         .arg("assert-diff")
-        .args(&["--target", to_str!(dir_path.join("target"))])
+        .args(["--target", to_str!(dir_path.join("target"))])
         .assert();
 
     // Assert
@@ -109,9 +109,9 @@ fn test_no_changes() -> Result<()> {
     let mut cmd = get_cmd();
     let assert = cmd
         .arg("assert-diff")
-        .args(&["--target", to_str!(dir_path.join("target"))])
+        .args(["--target", to_str!(dir_path.join("target"))])
         .arg("--")
-        .args(&["echo", "Hello, World!"])
+        .args(["echo", "Hello, World!"])
         .assert();
 
     // Assert
@@ -143,9 +143,9 @@ fn test_changes_create() -> Result<()> {
     let assert = cmd
         .current_dir(dir_path)
         .arg("assert-diff")
-        .args(&["--target", to_str!(dir_path.join("target"))])
+        .args(["--target", to_str!(dir_path.join("target"))])
         .arg("--")
-        .args(&[
+        .args([
             "sh",
             "-c",
             r#"
@@ -189,9 +189,9 @@ fn test_changes_modify() -> Result<()> {
     let assert = cmd
         .current_dir(dir_path)
         .arg("assert-diff")
-        .args(&["--target", to_str!(dir_path.join("target"))])
+        .args(["--target", to_str!(dir_path.join("target"))])
         .arg("--")
-        .args(&[
+        .args([
             "sh",
             "-c",
             r#"
@@ -235,9 +235,9 @@ fn test_changes_delete() -> Result<()> {
     let assert = cmd
         .current_dir(dir_path)
         .arg("assert-diff")
-        .args(&["--target", to_str!(dir_path.join("target"))])
+        .args(["--target", to_str!(dir_path.join("target"))])
         .arg("--")
-        .args(&[
+        .args([
             "sh",
             "-c",
             r#"
@@ -280,10 +280,10 @@ fn test_on_command_error_propagate() -> Result<()> {
     let assert = cmd
         .current_dir(dir_path)
         .arg("assert-diff")
-        .args(&["--target", to_str!(dir_path.join("target"))])
-        .args(&["--on-command-error", "propagate"])
+        .args(["--target", to_str!(dir_path.join("target"))])
+        .args(["--on-command-error", "propagate"])
         .arg("--")
-        .args(&["sh", "-c", "exit 42"])
+        .args(["sh", "-c", "exit 42"])
         .assert();
 
     // Assert
@@ -314,10 +314,10 @@ fn test_on_command_error_ignore() -> Result<()> {
     let assert = cmd
         .current_dir(dir_path)
         .arg("assert-diff")
-        .args(&["--target", to_str!(dir_path.join("target"))])
-        .args(&["--on-command-error", "ignore"])
+        .args(["--target", to_str!(dir_path.join("target"))])
+        .args(["--on-command-error", "ignore"])
         .arg("--")
-        .args(&["sh", "-c", "exit 42"])
+        .args(["sh", "-c", "exit 42"])
         .assert();
 
     // Assert

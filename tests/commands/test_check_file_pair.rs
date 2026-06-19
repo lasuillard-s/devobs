@@ -17,8 +17,8 @@ fn test_empty_directory_no_error_no_output() -> Result<()> {
     let mut cmd = get_cmd();
     let assert = cmd
         .arg("check-file-pair")
-        .args(&["--from", to_str!(dir_path.join("src"))])
-        .args(&["--to", to_str!(dir_path.join("tests"))])
+        .args(["--from", to_str!(dir_path.join("src"))])
+        .args(["--to", to_str!(dir_path.join("tests"))])
         .assert();
 
     // Assert
@@ -51,10 +51,10 @@ fn test_forward_matching() -> Result<()> {
     let mut cmd = get_cmd();
     let assert = cmd
         .arg("check-file-pair")
-        .args(&["--from", to_str!(dir_path.join("src"))])
-        .args(&["--to", to_str!(dir_path.join("tests"))])
-        .args(&["--include", "**/*.py"])
-        .args(&["--expect", "{to}/{relative_from}/test_{filename}"])
+        .args(["--from", to_str!(dir_path.join("src"))])
+        .args(["--to", to_str!(dir_path.join("tests"))])
+        .args(["--include", "**/*.py"])
+        .args(["--expect", "{to}/{relative_from}/test_{filename}"])
         .assert();
 
     // Assert
@@ -101,10 +101,10 @@ fn test_backward_matching() -> Result<()> {
     let mut cmd = get_cmd();
     let assert = cmd
         .arg("check-file-pair")
-        .args(&["--from", to_str!(dir_path.join("tests"))])
-        .args(&["--to", to_str!(dir_path.join("src"))])
-        .args(&["--include", "**/*.py"])
-        .args(&["--filename-regex", "^test_(?P<filename>.*)$"])
+        .args(["--from", to_str!(dir_path.join("tests"))])
+        .args(["--to", to_str!(dir_path.join("src"))])
+        .args(["--include", "**/*.py"])
+        .args(["--filename-regex", "^test_(?P<filename>.*)$"])
         .assert();
 
     // Assert
@@ -158,11 +158,11 @@ fn test_on_fully_populated_directory() -> Result<()> {
     let mut cmd = get_cmd();
     let assert = cmd
         .arg("check-file-pair")
-        .args(&["--from", to_str!(dir_path.join("src"))])
-        .args(&["--to", to_str!(dir_path.join("tests"))])
-        .args(&["--include", "**/*.py"])
-        .args(&["--exclude", "**/migrations/*.py", "**/_*.py"])
-        .args(&["--expect", "{to}/{relative_from}/test_{filename}"])
+        .args(["--from", to_str!(dir_path.join("src"))])
+        .args(["--to", to_str!(dir_path.join("tests"))])
+        .args(["--include", "**/*.py"])
+        .args(["--exclude", "**/migrations/*.py", "**/_*.py"])
+        .args(["--expect", "{to}/{relative_from}/test_{filename}"])
         .assert();
 
     // Assert
@@ -211,12 +211,12 @@ fn test_create_if_not_exists() -> Result<()> {
     let mut cmd = get_cmd();
     let assert = cmd
         .arg("check-file-pair")
-        .args(&["--from", to_str!(dir_path.join("src"))])
-        .args(&["--to", to_str!(dir_path.join("tests"))])
-        .args(&["--include", "**/*.py"])
-        .args(&["--exclude", "**/_*.py"])
-        .args(&["--expect", "{to}/{relative_from}/test_{filename}"])
-        .args(&["--create-if-not-exists"])
+        .args(["--from", to_str!(dir_path.join("src"))])
+        .args(["--to", to_str!(dir_path.join("tests"))])
+        .args(["--include", "**/*.py"])
+        .args(["--exclude", "**/_*.py"])
+        .args(["--expect", "{to}/{relative_from}/test_{filename}"])
+        .args(["--create-if-not-exists"])
         .assert();
 
     // Assert
@@ -265,12 +265,12 @@ fn test_create_if_not_exists_dry_run() -> Result<()> {
     let assert = cmd
         .arg("--dry-run")
         .arg("check-file-pair")
-        .args(&["--from", to_str!(dir_path.join("src"))])
-        .args(&["--to", to_str!(dir_path.join("tests"))])
-        .args(&["--include", "**/*.py"])
-        .args(&["--exclude", "**/_*.py"])
-        .args(&["--expect", "{to}/{relative_from}/test_{filename}"])
-        .args(&["--create-if-not-exists"])
+        .args(["--from", to_str!(dir_path.join("src"))])
+        .args(["--to", to_str!(dir_path.join("tests"))])
+        .args(["--include", "**/*.py"])
+        .args(["--exclude", "**/_*.py"])
+        .args(["--expect", "{to}/{relative_from}/test_{filename}"])
+        .args(["--create-if-not-exists"])
         .assert();
 
     // Assert
