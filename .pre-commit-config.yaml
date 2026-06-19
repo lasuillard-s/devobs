@@ -31,8 +31,8 @@ repos:
         language: system
         types: [rust]
         pass_filenames: false
-        entry: cargo clippy --
-        args: [--fix, --deny, warnings]
+        entry: cargo clippy
+        args: [--fix, --allow-dirty, --, --deny, warnings]
 
       - id: cargo-fmt
         name: cargo fmt (nightly)
