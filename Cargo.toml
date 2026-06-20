@@ -5,7 +5,7 @@ edition = "2024"
 description = "CLI for obsessed developers."
 readme = "README.md"
 authors = ["Yuchan Lee <lasuillard@gmail.com>"]
-homepage = "https://github.com/lasuillard/devobs"
+homepage = "https://github.com/lasuillard-s/devobs"
 license = "MIT"
 
 [dependencies]
