@@ -33,8 +33,13 @@
             cargo-llvm-cov
             cargo-nextest
             cargo-watch
+            cargo-insta
             maturin
           ];
+
+          shellHook = ''
+            pre-commit install
+          '';
         };
       }
     );
