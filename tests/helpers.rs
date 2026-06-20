@@ -43,7 +43,7 @@ pub(crate) fn get_temp_dir(files: HashMap<&str, &str>) -> TempDir {
     let temp_dir = tempdir().expect("Failed to create temp dir");
     let dir_path = temp_dir.path();
     for (path, content) in files {
-        let full_path = dir_path.join(&path);
+        let full_path = dir_path.join(path);
 
         // If path ends with a slash, create a directory and continue
         if path.ends_with("/") {

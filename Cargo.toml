@@ -5,7 +5,7 @@ edition = "2024"
 description = "CLI for obsessed developers."
 readme = "README.md"
 authors = ["Yuchan Lee <lasuillard@gmail.com>"]
-homepage = "https://github.com/lasuillard/devobs"
+homepage = "https://github.com/lasuillard-s/devobs"
 license = "MIT"
 
 [dependencies]
@@ -21,9 +21,9 @@ sugars = "3.0.1"
 serde = { version = "1.0.228", features = ["derive"] }
 
 [dev-dependencies]
-assert_cmd = "=2.2.2"
-insta = "=1.47.2"
-mockall = "=0.14.0"
-reqwest = "=0.13.4"
-rstest = "=0.26.1"
-tempfile = "=3.27.0"
+assert_cmd = "2.2.2"
+insta = "1.47.2"
+mockall = "0.14.0"
+reqwest = "0.13.4"
+rstest = "0.26.1"
+tempfile = "3.27.0"

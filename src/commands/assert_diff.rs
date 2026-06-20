@@ -1,7 +1,7 @@
 use std::{fs::File,
           hash::{DefaultHasher, Hash, Hasher},
           io::Read,
-          path::{PathBuf, absolute}};
+          path::{Path, PathBuf, absolute}};
 
 use anyhow::{Result, bail};
 use clap::{Args, ValueEnum};
@@ -122,11 +122,7 @@ pub(crate) fn command(args: CommandArgs, _global_opts: GlobalOpts) -> Result<()>
 //       but using our version here for more control over hashing process (hasher, include/exclude patterns, etc.)
 // TODO(lasuillard): `DefaultHasher` may change between Rust versions, consider replacing it with more stable hasher
 //                   IF speed becomes an issue, for large file handling (BLAKE3 or xxHash)
-fn calculate_directory_hash(
-    path: &PathBuf,
-    include: &[String],
-    exclude: &[String],
-) -> Result<String> {
+fn calculate_directory_hash(path: &Path, include: &[String], exclude: &[String]) -> Result<String> {
     log::debug!(
         "Calculating hash for directory: {}; include: {:?}, exclude: {:?}",
         path.display(),
@@ -135,7 +131,7 @@ fn calculate_directory_hash(
     );
     let mut hasher = DefaultHasher::new();
     let mut buffer = [0; BUFFER_SIZE];
-    for path in list_files(&path, &include, &exclude) {
+    for path in list_files(path, include, exclude) {
         // ? Should take account directory structure in the hash?
         if path.is_dir() {
             log::debug!("Skipping directory: {}", path.display());
