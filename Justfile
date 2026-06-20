@@ -56,6 +56,16 @@ build:
 run *args="--help":
     cargo watch --exec 'run -- {{ args }}'
 
+# Build the application via Maturin and run it with pipx
+run-py *args="--help":
+    #!/usr/bin/env bash
+    rm --recursive --force target/wheels/*
+    maturin build --release
+    wheel_file="$(ls target/wheels/devobs-*.whl | sort | tail -1)"
+    pipx run --spec "$wheel_file" devobs {{ args }}
+
+alias runp := run-py
+
 # =============================================================================
 # Utility
 # =============================================================================
