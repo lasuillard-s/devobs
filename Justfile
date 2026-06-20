@@ -20,12 +20,12 @@ alias up := update
 # =============================================================================
 
 # Run all checks
-ci: (format "--check") lint ub-check test
+ci: (format "yes") lint ub-check test
 
 # Autoformat code
-[arg("check", long, value="--check")]
-format check="":
-    rustup run nightly cargo fmt {{check}}
+[arg("check", long="check", value="yes")]
+format check="no":
+    rustup run nightly cargo fmt {{ if check == "yes" { "--check" } else { "" } }}
 
 alias fmt := format
 
@@ -54,7 +54,7 @@ build:
 
 # Run application in dev mode
 run *args="--help":
-    cargo watch --exec 'run -- {{args}}'
+    cargo watch --exec 'run -- {{ args }}'
 
 # =============================================================================
 # Utility
