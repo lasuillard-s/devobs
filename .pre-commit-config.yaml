@@ -12,7 +12,7 @@ repos:
 
   # Dogfooding
   - repo: https://github.com/lasuillard-s/devobs
-    rev: main
+    rev: v0.2.7
     hooks:
       # Ensure each command has its test file pair
       - id: check-file-pair
