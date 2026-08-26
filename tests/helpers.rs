@@ -89,7 +89,6 @@ pub(crate) fn list_dir(dir: &Path) -> Vec<String> {
 }
 
 /// Parses the output of a command execution, returning the standard output and error as strings.
-// TODO(lasuillard): Add argument for normalization (such as temporary paths)
 pub(crate) fn parse_output(output: &Output) -> (String, String) {
     let stdout = String::from_utf8_lossy(output.stdout.as_ref());
     let stderr = String::from_utf8_lossy(output.stderr.as_ref());

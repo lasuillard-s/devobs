@@ -49,7 +49,6 @@ enum Commands {
     AssertDiff(crate::commands::assert_diff::CommandArgs),
 }
 
-// TODO(lasuillard): Customize log formatter
 async fn _main(args: Cli) -> Result<()> {
     let global_opts = args.global_opts;
 

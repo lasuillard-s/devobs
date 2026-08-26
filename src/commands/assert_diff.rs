@@ -120,8 +120,6 @@ pub(crate) fn command(args: CommandArgs, _global_opts: GlobalOpts) -> Result<()>
 
 // NOTE: There is more performant library [merkle_hash](https://github.com/hristogochev/merkle_hash) exists,
 //       but using our version here for more control over hashing process (hasher, include/exclude patterns, etc.)
-// TODO(lasuillard): `DefaultHasher` may change between Rust versions, consider replacing it with more stable hasher
-//                   IF speed becomes an issue, for large file handling (BLAKE3 or xxHash)
 fn calculate_directory_hash(path: &Path, include: &[String], exclude: &[String]) -> Result<String> {
     log::debug!(
         "Calculating hash for directory: {}; include: {:?}, exclude: {:?}",
