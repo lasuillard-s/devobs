@@ -15,7 +15,7 @@ log = "=0.4.33"
 regex = "=1.13.1"
 simplelog = "=0.12.2"
 strfmt = "=0.2.5"
-tokio = { version = "=1.52.3", features = ["full"] }
+tokio = { version = "=1.53.1", features = ["full"] }
 anyhow = "=1.0.104"
 sugars = "=3.0.1"
 serde = { version = "=1.0.229", features = ["derive"] }
