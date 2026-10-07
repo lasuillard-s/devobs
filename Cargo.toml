@@ -14,7 +14,7 @@ glob = "=0.3.4"
 log = "=0.4.34"
 regex = "=1.13.1"
 simplelog = "=0.12.2"
-strfmt = "=0.2.5"
+strfmt = "=0.2.6"
 tokio = { version = "=1.53.1", features = ["full"] }
 anyhow = "=1.0.104"
 sugars = "=3.0.1"
