@@ -4,6 +4,9 @@ on:
   release:
     types: [published]
 
+  # Dry-run (don't actually release) trigger for manual execution
+  workflow_dispatch: {}
+
 concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: false
@@ -70,6 +73,7 @@ jobs:
 
   release:
     name: Release
+    if: github.event_name == 'release' && github.event.action == 'published'
     needs: [build, sdist]
     runs-on: ubuntu-latest
     timeout-minutes: 5
