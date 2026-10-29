@@ -32,6 +32,12 @@ pub(crate) fn normalize_console_output<S: AsRef<str>, T: ToString + std::fmt::Di
         output = output.replace(&key.to_string(), value);
     }
 
+    #[cfg(windows)]
+    {
+        output = output.replace("\\", "/");
+        output = output.replace("exit code: ", "exit status: ");
+    }
+
     output
 }
 
@@ -83,7 +89,7 @@ pub(crate) fn list_dir(dir: &Path) -> Vec<String> {
                 .expect("Failed to strip prefix")
                 .to_str()
                 .expect("Failed to convert path to str")
-                .to_owned()
+                .replace("\\", "/")
         })
         .collect()
 }
