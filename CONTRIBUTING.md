@@ -17,7 +17,6 @@ This project uses the following tech stack:
 - [Rust](https://www.rust-lang.org)
 - [clap](https://docs.rs/clap/latest/clap/) for command-line parsing
 - [Clippy](https://doc.rust-lang.org/clippy/) for linting, and [rustfmt](https://github.com/rust-lang/rustfmt) for formatting
-- [Miri](https://github.com/rust-lang/miri) for undefined behavior checks
 - [cargo-nextest](https://nexte.st/) for test coverage and execution
 
 ### 📂 Key directory structure
